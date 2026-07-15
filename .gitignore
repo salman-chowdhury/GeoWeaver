@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# JavaScript
+node_modules/
+dist/
+build/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+
+# Editors and operating systems
+.DS_Store
+.vscode/
+.idea/
+
+# Geospatial and generated data
+*.tif
+*.tiff
+*.las
+*.laz
+*.gpkg
+*.mbtiles
+*.parquet
+*.feather
+*.pbf
+*.osm
+*.zip
+cache/
+outputs/
+data/raw/
+data/interim/
+data/processed/
+
+# Models
+*.pt
+*.pth
+*.onnx
+*.joblib
+*.pkl
