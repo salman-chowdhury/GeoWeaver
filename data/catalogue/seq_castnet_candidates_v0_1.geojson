@@ -1,0 +1,853 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "catalogue_version": "v0.1-research-batch-1",
+    "data_classification": "manual_user_supplied",
+    "notice": "Preliminary desk-research catalogue. Public access and facilities are sourced from official council pages; physical ratings are conservative remote assessments. Health-advisory status remains unknown and some sites have incomplete safety information, so this file is not yet a real-world recommendation catalogue.",
+    "generated_at": "2026-07-16T16:41:28+10:00"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          153.2146188,
+          -27.71835447
+        ]
+      },
+      "properties": {
+        "segment_id": "logan-albert-river-park",
+        "name": "Albert River Park fishing pontoon",
+        "region": "Logan",
+        "waterway": "Albert River",
+        "shoreline_type": "built_edge",
+        "substrate": "mixed",
+        "bank_slope_class": "gentle",
+        "public_access_status": "verified_public",
+        "verification_status": "remote_reviewed",
+        "activity_permission_status": "permitted",
+        "activity_permission_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "tidal_status": "tidal",
+        "health_advisory_status": "unknown",
+        "health_advisory_evidence": {
+          "restriction_id": "logan-albert-river-park-health-review",
+          "restriction_type": "health_advisory",
+          "status": "unknown",
+          "authority": "GeoWeaver desk review",
+          "source_ref": "research://seq-candidate-review/2026-07-16/logan-albert-health",
+          "reason": "Current health and seafood-consumption advisory status was not resolved by authoritative online sources during this desk review. A 2024 precautionary seafood-consumption warning affected tidal reaches of the Logan and Albert Rivers. Recheck current official advice and onsite signage before use.",
+          "effective_from": null,
+          "effective_to": null,
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "inferred"
+        },
+        "casting_space_rating": 3,
+        "parking": {
+          "available": null,
+          "spaces_estimate": null,
+          "notes": "Parking availability or capacity was not confirmed in the official park listing."
+        },
+        "toilets": true,
+        "family_suitability": 4,
+        "privacy_rating": 2,
+        "mud_risk": 2,
+        "snag_risk": 2,
+        "boat_traffic_rating": 2,
+        "wind_shelter_rating": 2,
+        "habitat_features": [
+          "built_structure",
+          "estuarine_connection"
+        ],
+        "preferred_tide_stages": [],
+        "legal_status_known": true,
+        "legal_status_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "safety_information_complete": true,
+        "restrictions": [],
+        "restriction_review_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/closures",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "source_refs": [
+          "https://www.logan.qld.gov.au/directory-record/1317/albert-river-park",
+          "https://www.logan.qld.gov.au/fishing",
+          "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/closures",
+          "https://www.dpi.qld.gov.au/business-priorities/fisheries/closures/tidal/waters",
+          "research://seq-candidate-review/2026-07-16/logan-albert-health"
+        ],
+        "last_updated": "2026-07-16T16:41:28+10:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          153.1892232,
+          -27.7003215
+        ]
+      },
+      "properties": {
+        "segment_id": "logan-alexander-clark-park",
+        "name": "Alexander Clark Park river pontoons",
+        "region": "Logan",
+        "waterway": "Logan River",
+        "shoreline_type": "built_edge",
+        "substrate": "mixed",
+        "bank_slope_class": "gentle",
+        "public_access_status": "verified_public",
+        "verification_status": "remote_reviewed",
+        "activity_permission_status": "permitted",
+        "activity_permission_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "tidal_status": "tidal",
+        "health_advisory_status": "unknown",
+        "health_advisory_evidence": {
+          "restriction_id": "logan-alexander-clark-park-health-review",
+          "restriction_type": "health_advisory",
+          "status": "unknown",
+          "authority": "GeoWeaver desk review",
+          "source_ref": "research://seq-candidate-review/2026-07-16/logan-albert-health",
+          "reason": "Current health and seafood-consumption advisory status was not resolved by authoritative online sources during this desk review. A 2024 precautionary seafood-consumption warning affected tidal reaches of the Logan and Albert Rivers. Recheck current official advice and onsite signage before use.",
+          "effective_from": null,
+          "effective_to": null,
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "inferred"
+        },
+        "casting_space_rating": 3,
+        "parking": {
+          "available": true,
+          "spaces_estimate": null,
+          "notes": "Carpark listed by Logan City Council."
+        },
+        "toilets": true,
+        "family_suitability": 5,
+        "privacy_rating": 1,
+        "mud_risk": 2,
+        "snag_risk": 2,
+        "boat_traffic_rating": 2,
+        "wind_shelter_rating": 3,
+        "habitat_features": [
+          "built_structure",
+          "estuarine_connection"
+        ],
+        "preferred_tide_stages": [],
+        "legal_status_known": true,
+        "legal_status_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "safety_information_complete": true,
+        "restrictions": [],
+        "restriction_review_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/closures",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "source_refs": [
+          "https://www.logan.qld.gov.au/directory-record/1320/alexander-clark-park",
+          "https://www.logan.qld.gov.au/fishing",
+          "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/closures",
+          "https://www.dpi.qld.gov.au/business-priorities/fisheries/closures/tidal/waters",
+          "research://seq-candidate-review/2026-07-16/logan-albert-health"
+        ],
+        "last_updated": "2026-07-16T16:41:28+10:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          153.1931156,
+          -27.69876129
+        ]
+      },
+      "properties": {
+        "segment_id": "logan-logan-river-parklands",
+        "name": "Logan River Parklands fishing pontoon",
+        "region": "Logan",
+        "waterway": "Logan River",
+        "shoreline_type": "built_edge",
+        "substrate": "mixed",
+        "bank_slope_class": "gentle",
+        "public_access_status": "verified_public",
+        "verification_status": "remote_reviewed",
+        "activity_permission_status": "permitted",
+        "activity_permission_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "tidal_status": "tidal",
+        "health_advisory_status": "unknown",
+        "health_advisory_evidence": {
+          "restriction_id": "logan-logan-river-parklands-health-review",
+          "restriction_type": "health_advisory",
+          "status": "unknown",
+          "authority": "GeoWeaver desk review",
+          "source_ref": "research://seq-candidate-review/2026-07-16/logan-albert-health",
+          "reason": "Current health and seafood-consumption advisory status was not resolved by authoritative online sources during this desk review. A 2024 precautionary seafood-consumption warning affected tidal reaches of the Logan and Albert Rivers. Recheck current official advice and onsite signage before use.",
+          "effective_from": null,
+          "effective_to": null,
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "inferred"
+        },
+        "casting_space_rating": 3,
+        "parking": {
+          "available": true,
+          "spaces_estimate": null,
+          "notes": "Carpark listed by Logan City Council."
+        },
+        "toilets": true,
+        "family_suitability": 5,
+        "privacy_rating": 1,
+        "mud_risk": 2,
+        "snag_risk": 2,
+        "boat_traffic_rating": 4,
+        "wind_shelter_rating": 2,
+        "habitat_features": [
+          "built_structure",
+          "estuarine_connection"
+        ],
+        "preferred_tide_stages": [],
+        "legal_status_known": true,
+        "legal_status_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "safety_information_complete": true,
+        "restrictions": [],
+        "restriction_review_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/closures",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "source_refs": [
+          "https://www.logan.qld.gov.au/directory-record/1536/logan-river-parklands",
+          "https://www.logan.qld.gov.au/fishing",
+          "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/closures",
+          "https://www.dpi.qld.gov.au/business-priorities/fisheries/closures/tidal/waters",
+          "research://seq-candidate-review/2026-07-16/logan-albert-health"
+        ],
+        "last_updated": "2026-07-16T16:41:28+10:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          153.2789016,
+          -27.6946406
+        ]
+      },
+      "properties": {
+        "segment_id": "logan-riedel-park",
+        "name": "Riedel Park fishing platform",
+        "region": "Logan",
+        "waterway": "Logan River",
+        "shoreline_type": "built_edge",
+        "substrate": "mixed",
+        "bank_slope_class": "gentle",
+        "public_access_status": "verified_public",
+        "verification_status": "remote_reviewed",
+        "activity_permission_status": "permitted",
+        "activity_permission_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "tidal_status": "tidal",
+        "health_advisory_status": "unknown",
+        "health_advisory_evidence": {
+          "restriction_id": "logan-riedel-park-health-review",
+          "restriction_type": "health_advisory",
+          "status": "unknown",
+          "authority": "GeoWeaver desk review",
+          "source_ref": "research://seq-candidate-review/2026-07-16/logan-albert-health",
+          "reason": "Current health and seafood-consumption advisory status was not resolved by authoritative online sources during this desk review. A 2024 precautionary seafood-consumption warning affected tidal reaches of the Logan and Albert Rivers. Recheck current official advice and onsite signage before use.",
+          "effective_from": null,
+          "effective_to": null,
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "inferred"
+        },
+        "casting_space_rating": 3,
+        "parking": {
+          "available": true,
+          "spaces_estimate": null,
+          "notes": "Carpark listed by Logan City Council."
+        },
+        "toilets": null,
+        "family_suitability": 4,
+        "privacy_rating": 3,
+        "mud_risk": 1,
+        "snag_risk": 2,
+        "boat_traffic_rating": 3,
+        "wind_shelter_rating": 2,
+        "habitat_features": [
+          "built_structure",
+          "mangrove_edge",
+          "estuarine_connection"
+        ],
+        "preferred_tide_stages": [],
+        "legal_status_known": true,
+        "legal_status_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "safety_information_complete": true,
+        "restrictions": [],
+        "restriction_review_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/closures",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "source_refs": [
+          "https://www.logan.qld.gov.au/directory-record/1721/riedel-park",
+          "https://www.logan.qld.gov.au/fishing",
+          "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/closures",
+          "https://www.dpi.qld.gov.au/business-priorities/fisheries/closures/tidal/waters",
+          "research://seq-candidate-review/2026-07-16/logan-albert-health",
+          "https://mycitylogan.com.au/anglers-paradise-opens-at-carbrook/"
+        ],
+        "last_updated": "2026-07-16T16:41:28+10:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          153.155676,
+          -27.671102
+        ]
+      },
+      "properties": {
+        "segment_id": "logan-riverdale-park",
+        "name": "Riverdale Park fishing pontoon",
+        "region": "Logan",
+        "waterway": "Logan River",
+        "shoreline_type": "built_edge",
+        "substrate": "mixed",
+        "bank_slope_class": "gentle",
+        "public_access_status": "verified_public",
+        "verification_status": "remote_reviewed",
+        "activity_permission_status": "permitted",
+        "activity_permission_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "tidal_status": "tidal",
+        "health_advisory_status": "unknown",
+        "health_advisory_evidence": {
+          "restriction_id": "logan-riverdale-park-health-review",
+          "restriction_type": "health_advisory",
+          "status": "unknown",
+          "authority": "GeoWeaver desk review",
+          "source_ref": "research://seq-candidate-review/2026-07-16/logan-albert-health",
+          "reason": "Current health and seafood-consumption advisory status was not resolved by authoritative online sources during this desk review. A 2024 precautionary seafood-consumption warning affected tidal reaches of the Logan and Albert Rivers. Recheck current official advice and onsite signage before use.",
+          "effective_from": null,
+          "effective_to": null,
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "inferred"
+        },
+        "casting_space_rating": 3,
+        "parking": {
+          "available": true,
+          "spaces_estimate": null,
+          "notes": "Carpark listed by Logan City Council."
+        },
+        "toilets": true,
+        "family_suitability": 5,
+        "privacy_rating": 2,
+        "mud_risk": 2,
+        "snag_risk": 2,
+        "boat_traffic_rating": 2,
+        "wind_shelter_rating": 3,
+        "habitat_features": [
+          "built_structure",
+          "estuarine_connection"
+        ],
+        "preferred_tide_stages": [],
+        "legal_status_known": true,
+        "legal_status_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "safety_information_complete": true,
+        "restrictions": [],
+        "restriction_review_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/closures",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "source_refs": [
+          "https://www.logan.qld.gov.au/directory-record/1625/riverdale-park",
+          "https://www.logan.qld.gov.au/fishing",
+          "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/closures",
+          "https://www.dpi.qld.gov.au/business-priorities/fisheries/closures/tidal/waters",
+          "research://seq-candidate-review/2026-07-16/logan-albert-health"
+        ],
+        "last_updated": "2026-07-16T16:41:28+10:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          153.2265087,
+          -27.67978375
+        ]
+      },
+      "properties": {
+        "segment_id": "logan-skinners-park",
+        "name": "Skinners Park fishing pontoon",
+        "region": "Logan",
+        "waterway": "Logan River",
+        "shoreline_type": "built_edge",
+        "substrate": "mixed",
+        "bank_slope_class": "gentle",
+        "public_access_status": "verified_public",
+        "verification_status": "remote_reviewed",
+        "activity_permission_status": "permitted",
+        "activity_permission_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "tidal_status": "tidal",
+        "health_advisory_status": "unknown",
+        "health_advisory_evidence": {
+          "restriction_id": "logan-skinners-park-health-review",
+          "restriction_type": "health_advisory",
+          "status": "unknown",
+          "authority": "GeoWeaver desk review",
+          "source_ref": "research://seq-candidate-review/2026-07-16/logan-albert-health",
+          "reason": "Current health and seafood-consumption advisory status was not resolved by authoritative online sources during this desk review. A 2024 precautionary seafood-consumption warning affected tidal reaches of the Logan and Albert Rivers. Recheck current official advice and onsite signage before use.",
+          "effective_from": null,
+          "effective_to": null,
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "inferred"
+        },
+        "casting_space_rating": 3,
+        "parking": {
+          "available": null,
+          "spaces_estimate": null,
+          "notes": "Parking availability or capacity was not confirmed in the official park listing."
+        },
+        "toilets": true,
+        "family_suitability": 4,
+        "privacy_rating": 2,
+        "mud_risk": 2,
+        "snag_risk": 2,
+        "boat_traffic_rating": 4,
+        "wind_shelter_rating": 2,
+        "habitat_features": [
+          "built_structure",
+          "estuarine_connection"
+        ],
+        "preferred_tide_stages": [],
+        "legal_status_known": true,
+        "legal_status_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "safety_information_complete": true,
+        "restrictions": [],
+        "restriction_review_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/closures",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "source_refs": [
+          "https://www.logan.qld.gov.au/directory-record/1647/skinners-park",
+          "https://www.logan.qld.gov.au/fishing",
+          "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/closures",
+          "https://www.dpi.qld.gov.au/business-priorities/fisheries/closures/tidal/waters",
+          "research://seq-candidate-review/2026-07-16/logan-albert-health"
+        ],
+        "last_updated": "2026-07-16T16:41:28+10:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          153.1425458,
+          -27.68194134
+        ]
+      },
+      "properties": {
+        "segment_id": "logan-federation-drive-reserve",
+        "name": "Federation Drive Reserve riverbank",
+        "region": "Logan",
+        "waterway": "Logan River",
+        "shoreline_type": "built_edge",
+        "substrate": "mixed",
+        "bank_slope_class": "moderate",
+        "public_access_status": "verified_public",
+        "verification_status": "remote_reviewed",
+        "activity_permission_status": "permitted",
+        "activity_permission_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "tidal_status": "tidal",
+        "health_advisory_status": "unknown",
+        "health_advisory_evidence": {
+          "restriction_id": "logan-federation-drive-reserve-health-review",
+          "restriction_type": "health_advisory",
+          "status": "unknown",
+          "authority": "GeoWeaver desk review",
+          "source_ref": "research://seq-candidate-review/2026-07-16/logan-albert-health",
+          "reason": "Current health and seafood-consumption advisory status was not resolved by authoritative online sources during this desk review. A 2024 precautionary seafood-consumption warning affected tidal reaches of the Logan and Albert Rivers. Recheck current official advice and onsite signage before use.",
+          "effective_from": null,
+          "effective_to": null,
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "inferred"
+        },
+        "casting_space_rating": 2,
+        "parking": {
+          "available": null,
+          "spaces_estimate": null,
+          "notes": "Parking availability or capacity was not confirmed in the official park listing."
+        },
+        "toilets": null,
+        "family_suitability": 2,
+        "privacy_rating": 3,
+        "mud_risk": 4,
+        "snag_risk": 3,
+        "boat_traffic_rating": 3,
+        "wind_shelter_rating": 2,
+        "habitat_features": [
+          "built_structure",
+          "estuarine_connection"
+        ],
+        "preferred_tide_stages": [],
+        "legal_status_known": true,
+        "legal_status_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "safety_information_complete": false,
+        "restrictions": [],
+        "restriction_review_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/closures",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "source_refs": [
+          "https://www.logan.qld.gov.au/directory-record/1444/federation-drive-reserve",
+          "https://www.logan.qld.gov.au/fishing",
+          "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/closures",
+          "https://www.dpi.qld.gov.au/business-priorities/fisheries/closures/tidal/waters",
+          "research://seq-candidate-review/2026-07-16/logan-albert-health"
+        ],
+        "last_updated": "2026-07-16T16:41:28+10:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          153.1400311,
+          -27.69200364
+        ]
+      },
+      "properties": {
+        "segment_id": "logan-larry-storey-park",
+        "name": "Larry Storey Park boat-ramp bank",
+        "region": "Logan",
+        "waterway": "Logan River",
+        "shoreline_type": "built_edge",
+        "substrate": "mud",
+        "bank_slope_class": "moderate",
+        "public_access_status": "verified_public",
+        "verification_status": "remote_reviewed",
+        "activity_permission_status": "permitted",
+        "activity_permission_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "tidal_status": "tidal",
+        "health_advisory_status": "unknown",
+        "health_advisory_evidence": {
+          "restriction_id": "logan-larry-storey-park-health-review",
+          "restriction_type": "health_advisory",
+          "status": "unknown",
+          "authority": "GeoWeaver desk review",
+          "source_ref": "research://seq-candidate-review/2026-07-16/logan-albert-health",
+          "reason": "Current health and seafood-consumption advisory status was not resolved by authoritative online sources during this desk review. A 2024 precautionary seafood-consumption warning affected tidal reaches of the Logan and Albert Rivers. Recheck current official advice and onsite signage before use.",
+          "effective_from": null,
+          "effective_to": null,
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "inferred"
+        },
+        "casting_space_rating": 1,
+        "parking": {
+          "available": null,
+          "spaces_estimate": null,
+          "notes": "Parking availability or capacity was not confirmed in the official park listing."
+        },
+        "toilets": true,
+        "family_suitability": 2,
+        "privacy_rating": 2,
+        "mud_risk": 5,
+        "snag_risk": 3,
+        "boat_traffic_rating": 3,
+        "wind_shelter_rating": 2,
+        "habitat_features": [
+          "built_structure",
+          "estuarine_connection"
+        ],
+        "preferred_tide_stages": [],
+        "legal_status_known": true,
+        "legal_status_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "safety_information_complete": false,
+        "restrictions": [],
+        "restriction_review_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/closures",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "source_refs": [
+          "https://www.logan.qld.gov.au/directory-record/1522/larry-storey-park",
+          "https://www.logan.qld.gov.au/fishing",
+          "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/closures",
+          "https://www.dpi.qld.gov.au/business-priorities/fisheries/closures/tidal/waters",
+          "research://seq-candidate-review/2026-07-16/logan-albert-health",
+          "https://www.couriermail.com.au/news/emergency-services/logan-boat-ramp-death-tanah-merah-man-34-stuck-in-mud-rescued-but-dies-in-hospital/news-story/11c9477261d08a8f4eb43ae8561773d4"
+        ],
+        "last_updated": "2026-07-16T16:41:28+10:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          153.2254661819229,
+          -27.68132360462207
+        ]
+      },
+      "properties": {
+        "segment_id": "logan-lawrence-park-wharf-road",
+        "name": "Lawrence Park (Wharf Road) riverbank",
+        "region": "Logan",
+        "waterway": "Logan River",
+        "shoreline_type": "estuary_bank",
+        "substrate": "mud",
+        "bank_slope_class": "unknown",
+        "public_access_status": "verified_public",
+        "verification_status": "remote_reviewed",
+        "activity_permission_status": "permitted",
+        "activity_permission_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "tidal_status": "tidal",
+        "health_advisory_status": "unknown",
+        "health_advisory_evidence": {
+          "restriction_id": "logan-lawrence-park-wharf-road-health-review",
+          "restriction_type": "health_advisory",
+          "status": "unknown",
+          "authority": "GeoWeaver desk review",
+          "source_ref": "research://seq-candidate-review/2026-07-16/logan-albert-health",
+          "reason": "Current health and seafood-consumption advisory status was not resolved by authoritative online sources during this desk review. A 2024 precautionary seafood-consumption warning affected tidal reaches of the Logan and Albert Rivers. Recheck current official advice and onsite signage before use.",
+          "effective_from": null,
+          "effective_to": null,
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "inferred"
+        },
+        "casting_space_rating": 1,
+        "parking": {
+          "available": null,
+          "spaces_estimate": null,
+          "notes": "Parking availability or capacity was not confirmed in the official park listing."
+        },
+        "toilets": null,
+        "family_suitability": 1,
+        "privacy_rating": 4,
+        "mud_risk": 4,
+        "snag_risk": 4,
+        "boat_traffic_rating": 2,
+        "wind_shelter_rating": 2,
+        "habitat_features": [
+          "estuarine_connection"
+        ],
+        "preferred_tide_stages": [],
+        "legal_status_known": true,
+        "legal_status_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "safety_information_complete": false,
+        "restrictions": [],
+        "restriction_review_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/closures",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "source_refs": [
+          "https://www.logan.qld.gov.au/directory-record/1762/lawrence-park-wharf-road-",
+          "https://www.logan.qld.gov.au/fishing",
+          "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/closures",
+          "https://www.dpi.qld.gov.au/business-priorities/fisheries/closures/tidal/waters",
+          "research://seq-candidate-review/2026-07-16/logan-albert-health"
+        ],
+        "last_updated": "2026-07-16T16:41:28+10:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          153.1685941,
+          -27.67922392
+        ]
+      },
+      "properties": {
+        "segment_id": "logan-tansey-park",
+        "name": "Tansey Park boat-ramp bank",
+        "region": "Logan",
+        "waterway": "Logan River",
+        "shoreline_type": "built_edge",
+        "substrate": "mixed",
+        "bank_slope_class": "moderate",
+        "public_access_status": "verified_public",
+        "verification_status": "remote_reviewed",
+        "activity_permission_status": "permitted",
+        "activity_permission_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "tidal_status": "tidal",
+        "health_advisory_status": "unknown",
+        "health_advisory_evidence": {
+          "restriction_id": "logan-tansey-park-health-review",
+          "restriction_type": "health_advisory",
+          "status": "unknown",
+          "authority": "GeoWeaver desk review",
+          "source_ref": "research://seq-candidate-review/2026-07-16/logan-albert-health",
+          "reason": "Current health and seafood-consumption advisory status was not resolved by authoritative online sources during this desk review. A 2024 precautionary seafood-consumption warning affected tidal reaches of the Logan and Albert Rivers. Recheck current official advice and onsite signage before use.",
+          "effective_from": null,
+          "effective_to": null,
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "inferred"
+        },
+        "casting_space_rating": 2,
+        "parking": {
+          "available": null,
+          "spaces_estimate": null,
+          "notes": "Parking availability or capacity was not confirmed in the official park listing."
+        },
+        "toilets": null,
+        "family_suitability": 3,
+        "privacy_rating": 2,
+        "mud_risk": 3,
+        "snag_risk": 3,
+        "boat_traffic_rating": 3,
+        "wind_shelter_rating": 2,
+        "habitat_features": [
+          "built_structure",
+          "estuarine_connection"
+        ],
+        "preferred_tide_stages": [],
+        "legal_status_known": true,
+        "legal_status_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "safety_information_complete": false,
+        "restrictions": [],
+        "restriction_review_evidence": {
+          "authority": "Queensland Government",
+          "source_ref": "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/closures",
+          "retrieved_at": "2026-07-16T16:41:28+10:00",
+          "evidence_state": "verified"
+        },
+        "source_refs": [
+          "https://www.logan.qld.gov.au/directory-record/1671/tansey-park",
+          "https://www.logan.qld.gov.au/fishing",
+          "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/equipment",
+          "https://www.qld.gov.au/recreation/activities/boating-fishing/rec-fishing/rules/closures",
+          "https://www.dpi.qld.gov.au/business-priorities/fisheries/closures/tidal/waters",
+          "research://seq-candidate-review/2026-07-16/logan-albert-health"
+        ],
+        "last_updated": "2026-07-16T16:41:28+10:00"
+      }
+    }
+  ]
+}
