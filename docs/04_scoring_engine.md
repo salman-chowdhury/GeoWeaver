@@ -30,6 +30,16 @@ A candidate is ineligible when any of the following is established:
 
 Unknown status is not equivalent to safe status. Critical unknowns should exclude or sharply reduce confidence.
 
+For the offline v0.1 rule profile, weather eligibility requires sourced and verified warning,
+lightning/thunderstorm, sustained-wind, and gust inputs. Sustained wind above 40 km/h or gusts
+above 60 km/h fail the weather gate. Missing values fail closed. These conservative thresholds
+are explicit rule constants and must be reviewed before any operational use. Condition snapshots
+also declare the segment IDs to which their location-specific footing, tide, and daylight
+evidence applies.
+
+A casting-space rating of 0/5 always fails the absolute casting-footprint gate. User preferences
+may require a higher rating but cannot reduce that safety minimum.
+
 ## Baseline score
 
 The MVP uses a 0–100 deterministic score:
@@ -37,18 +47,21 @@ The MVP uses a 0–100 deterministic score:
 ```text
 score =
   0.30 * habitat_opportunity
-+ 0.20 * tide_match
-+ 0.12 * wind_shelter
-+ 0.12 * physical_access
++ 0.32 * environmental_condition_match
++ 0.12 * access_and_usability
 + 0.08 * privacy
 + 0.08 * family_suitability
++ 0.05 * safety_and_risk
 + 0.05 * travel_efficiency
-+ 0.05 * evidence_quality
-- risk_penalties
-- uncertainty_penalties
 ```
 
-Weights are provisional and must be versioned.
+`environmental_condition_match` is 65% tide match and 35% wind match. Travel efficiency falls
+linearly from 100 at zero minutes to 0 at the configured maximum; travel beyond the maximum
+still fails the hard gate. Weights are provisional and must be versioned.
+
+Evidence quality is reported as an unweighted diagnostic component. Verification state, source
+coverage, inference, missing data, and freshness affect confidence only; they do not change the
+suitability score.
 
 ## Candidate feature groups
 

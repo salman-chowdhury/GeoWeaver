@@ -24,3 +24,10 @@
 ## Definition of done for v0.1
 
 A user can provide a time window and practical constraints, receive a reproducible ranked shortlist with explanations, visit a recommended site, and record the outcome in the repository's observation format.
+
+## Current implementation status
+
+The repository currently contains an offline scoring foundation using fictional synthetic
+fixtures. It does not yet satisfy the definition of done above or complete Issue #1. Real-trip
+inputs, 20 reviewed candidates, authoritative provenance, licence decisions, and a documented
+field observation remain open work.

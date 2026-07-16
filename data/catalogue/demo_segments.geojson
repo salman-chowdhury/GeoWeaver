@@ -1,0 +1,322 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "catalogue_version": "v0.1",
+    "data_classification": "synthetic_demo",
+    "notice": "All records, coordinates, conditions, and claims are fictional test fixtures."
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[0.0100, 0.0100], [0.0110, 0.0105]]
+      },
+      "properties": {
+        "segment_id": "demo-alpha-gutter",
+        "name": "Fictional Demo Alpha Gutter",
+        "region": "Synthetic Region A",
+        "waterway": "Imaginary Estuary",
+        "shoreline_type": "estuary_bank",
+        "substrate": "firm_earth",
+        "bank_slope_class": "gentle",
+        "public_access_status": "verified_public",
+        "verification_status": "field_verified",
+        "activity_permission_status": "permitted",
+        "tidal_status": "tidal",
+        "health_advisory_status": "inactive",
+        "health_advisory_evidence": {
+          "restriction_id": "demo-alpha-health-review",
+          "restriction_type": "health_advisory",
+          "status": "inactive",
+          "authority": "GeoWeaver synthetic fixture",
+          "source_ref": "demo://synthetic/health/alpha",
+          "reason": "Synthetic fixture states no active health advisory.",
+          "effective_from": "2026-01-01T00:00:00Z",
+          "effective_to": "2026-12-31T23:59:59Z",
+          "retrieved_at": "2026-01-15T00:00:00Z"
+        },
+        "casting_space_rating": 5,
+        "parking": {
+          "available": true,
+          "spaces_estimate": 12,
+          "notes": "Synthetic parking fixture; not a real facility."
+        },
+        "toilets": true,
+        "family_suitability": 5,
+        "privacy_rating": 3,
+        "mud_risk": 1,
+        "snag_risk": 1,
+        "boat_traffic_rating": 1,
+        "wind_shelter_rating": 4,
+        "habitat_features": [
+          "creek_mouth",
+          "shallow_gutter",
+          "mangrove_edge",
+          "estuarine_connection"
+        ],
+        "preferred_tide_stages": ["rising", "falling"],
+        "legal_status_known": true,
+        "safety_information_complete": true,
+        "restrictions": [
+          {
+            "restriction_id": "demo-alpha-restriction-review",
+            "restriction_type": "synthetic_legal_review",
+            "status": "inactive",
+            "authority": "GeoWeaver synthetic fixture",
+            "source_ref": "demo://synthetic/restrictions/alpha",
+            "reason": "Synthetic fixture states no active closure.",
+            "effective_from": "2026-01-01T00:00:00Z",
+            "effective_to": "2026-12-31T23:59:59Z",
+            "retrieved_at": "2026-01-15T00:00:00Z"
+          }
+        ],
+        "source_refs": [
+          "demo://synthetic/catalogue/v0.1",
+          "demo://synthetic/field-review/alpha"
+        ],
+        "last_updated": "2026-01-15T00:00:00Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [0.0200, 0.0100]
+      },
+      "properties": {
+        "segment_id": "demo-beta-sandbar",
+        "name": "Fictional Demo Beta Sandbar",
+        "region": "Synthetic Region A",
+        "waterway": "Imaginary Estuary",
+        "shoreline_type": "sandy_bank",
+        "substrate": "sand",
+        "bank_slope_class": "moderate",
+        "public_access_status": "verified_public",
+        "verification_status": "remote_reviewed",
+        "activity_permission_status": "permitted",
+        "tidal_status": "tidal",
+        "health_advisory_status": "inactive",
+        "health_advisory_evidence": {
+          "restriction_id": "demo-beta-health-review",
+          "restriction_type": "health_advisory",
+          "status": "inactive",
+          "authority": "GeoWeaver synthetic fixture",
+          "source_ref": "demo://synthetic/health/beta",
+          "reason": "Synthetic fixture states no active health advisory.",
+          "effective_from": "2026-01-01T00:00:00Z",
+          "effective_to": "2026-12-31T23:59:59Z",
+          "retrieved_at": "2026-01-15T00:00:00Z"
+        },
+        "casting_space_rating": 4,
+        "parking": {
+          "available": true,
+          "spaces_estimate": 4,
+          "notes": "Synthetic parking fixture; not a real facility."
+        },
+        "toilets": false,
+        "family_suitability": 3,
+        "privacy_rating": 5,
+        "mud_risk": 2,
+        "snag_risk": 3,
+        "boat_traffic_rating": 2,
+        "wind_shelter_rating": 2,
+        "habitat_features": ["sand_bar", "built_structure", "estuarine_connection"],
+        "preferred_tide_stages": ["high", "falling"],
+        "legal_status_known": true,
+        "safety_information_complete": true,
+        "restrictions": [],
+        "source_refs": ["demo://synthetic/catalogue/v0.1"],
+        "last_updated": "2026-01-15T00:00:00Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[0.0300, 0.0100], [0.0310, 0.0110]]
+      },
+      "properties": {
+        "segment_id": "demo-closed-reach",
+        "name": "Fictional Demo Closed Reach",
+        "region": "Synthetic Region B",
+        "waterway": "Model Creek",
+        "shoreline_type": "creek_edge",
+        "substrate": "firm_earth",
+        "bank_slope_class": "gentle",
+        "public_access_status": "verified_public",
+        "verification_status": "field_verified",
+        "activity_permission_status": "permitted",
+        "tidal_status": "tidal",
+        "health_advisory_status": "inactive",
+        "health_advisory_evidence": {
+          "restriction_id": "demo-closed-health-review",
+          "restriction_type": "health_advisory",
+          "status": "inactive",
+          "authority": "GeoWeaver synthetic fixture",
+          "source_ref": "demo://synthetic/health/closed-reach",
+          "reason": "Synthetic fixture states no active health advisory.",
+          "effective_from": "2026-01-01T00:00:00Z",
+          "effective_to": "2026-12-31T23:59:59Z",
+          "retrieved_at": "2026-01-15T00:00:00Z"
+        },
+        "casting_space_rating": 5,
+        "parking": {
+          "available": true,
+          "spaces_estimate": 8,
+          "notes": "Synthetic parking fixture; not a real facility."
+        },
+        "toilets": true,
+        "family_suitability": 5,
+        "privacy_rating": 4,
+        "mud_risk": 1,
+        "snag_risk": 1,
+        "boat_traffic_rating": 0,
+        "wind_shelter_rating": 5,
+        "habitat_features": [
+          "creek_mouth",
+          "drain_outfall",
+          "shallow_gutter",
+          "mangrove_edge"
+        ],
+        "preferred_tide_stages": ["rising"],
+        "legal_status_known": true,
+        "safety_information_complete": true,
+        "restrictions": [
+          {
+            "restriction_id": "demo-closure-001",
+            "restriction_type": "synthetic_closure",
+            "status": "active",
+            "authority": "GeoWeaver synthetic fixture",
+            "source_ref": "demo://synthetic/restrictions/closed-reach",
+            "reason": "A fictional active closure exists to exercise the legal hard gate.",
+            "effective_from": "2026-01-01T00:00:00Z",
+            "effective_to": "2026-12-31T23:59:59Z",
+            "retrieved_at": "2026-01-15T00:00:00Z"
+          }
+        ],
+        "source_refs": [
+          "demo://synthetic/catalogue/v0.1",
+          "demo://synthetic/field-review/closed"
+        ],
+        "last_updated": "2026-01-15T00:00:00Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [0.0400, 0.0100]
+      },
+      "properties": {
+        "segment_id": "demo-unknown-access",
+        "name": "Fictional Demo Unknown Access Edge",
+        "region": "Synthetic Region B",
+        "waterway": "Model Creek",
+        "shoreline_type": "mangrove_edge",
+        "substrate": "mixed",
+        "bank_slope_class": "moderate",
+        "public_access_status": "unknown",
+        "verification_status": "remote_reviewed",
+        "activity_permission_status": "permitted",
+        "tidal_status": "tidal",
+        "health_advisory_status": "inactive",
+        "health_advisory_evidence": {
+          "restriction_id": "demo-unknown-access-health-review",
+          "restriction_type": "health_advisory",
+          "status": "inactive",
+          "authority": "GeoWeaver synthetic fixture",
+          "source_ref": "demo://synthetic/health/unknown-access",
+          "reason": "Synthetic fixture states no active health advisory.",
+          "effective_from": "2026-01-01T00:00:00Z",
+          "effective_to": "2026-12-31T23:59:59Z",
+          "retrieved_at": "2026-01-15T00:00:00Z"
+        },
+        "casting_space_rating": 4,
+        "parking": {
+          "available": null,
+          "spaces_estimate": null,
+          "notes": "Parking is intentionally unknown in this synthetic fixture."
+        },
+        "toilets": null,
+        "family_suitability": 4,
+        "privacy_rating": 4,
+        "mud_risk": 3,
+        "snag_risk": 2,
+        "boat_traffic_rating": 1,
+        "wind_shelter_rating": 4,
+        "habitat_features": ["mangrove_edge", "estuarine_connection"],
+        "preferred_tide_stages": ["rising", "high"],
+        "legal_status_known": true,
+        "safety_information_complete": true,
+        "restrictions": [],
+        "source_refs": ["demo://synthetic/catalogue/v0.1"],
+        "last_updated": "2026-01-15T00:00:00Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [0.0500, 0.0100]
+      },
+      "properties": {
+        "segment_id": "demo-narrow-mud-edge",
+        "name": "Fictional Demo Narrow Mud Edge",
+        "region": "Synthetic Region C",
+        "waterway": "Example Inlet",
+        "shoreline_type": "mangrove_edge",
+        "substrate": "mud",
+        "bank_slope_class": "steep",
+        "public_access_status": "verified_public",
+        "verification_status": "unreviewed",
+        "activity_permission_status": "unknown",
+        "tidal_status": "unknown",
+        "health_advisory_status": "unknown",
+        "health_advisory_evidence": {
+          "restriction_id": "demo-narrow-health-review",
+          "restriction_type": "health_advisory",
+          "status": "unknown",
+          "authority": "GeoWeaver synthetic fixture",
+          "source_ref": "demo://synthetic/health/narrow-mud-edge",
+          "reason": "Synthetic fixture deliberately leaves health-advisory status unknown.",
+          "effective_from": "2026-01-01T00:00:00Z",
+          "effective_to": "2026-12-31T23:59:59Z",
+          "retrieved_at": "2026-01-15T00:00:00Z"
+        },
+        "casting_space_rating": 1,
+        "parking": {
+          "available": null,
+          "spaces_estimate": null,
+          "notes": "Parking is intentionally unknown in this synthetic fixture."
+        },
+        "toilets": null,
+        "family_suitability": 1,
+        "privacy_rating": 5,
+        "mud_risk": 5,
+        "snag_risk": 5,
+        "boat_traffic_rating": 4,
+        "wind_shelter_rating": 1,
+        "habitat_features": [],
+        "preferred_tide_stages": [],
+        "legal_status_known": false,
+        "safety_information_complete": false,
+        "restrictions": [
+          {
+            "restriction_id": "demo-unknown-restriction",
+            "restriction_type": "synthetic_legal_review",
+            "status": "unknown",
+            "authority": "GeoWeaver synthetic fixture",
+            "source_ref": "demo://synthetic/restrictions/unknown",
+            "reason": "Restriction status is intentionally unknown for hard-gate testing.",
+            "effective_from": "2026-01-01T00:00:00Z",
+            "effective_to": "2026-12-31T23:59:59Z",
+            "retrieved_at": "2026-01-15T00:00:00Z"
+          }
+        ],
+        "source_refs": ["demo://synthetic/catalogue/v0.1"],
+        "last_updated": "2026-01-15T00:00:00Z"
+      }
+    }
+  ]
+}
