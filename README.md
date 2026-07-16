@@ -31,6 +31,7 @@ The first practical milestone is a usable weekend prototype that can rank a cura
 The repository now provides a Python 3.12+ package that:
 
 - validates the documented v0.1 GeoJSON contract;
+- validates user-supplied trip, scoped-condition, and manual-travel JSON files;
 - applies fail-closed activity, tidal, legal/advisory, access, weather, terrain/footing,
   casting-space, daylight, family, travel-time, freshness, and critical-information gates;
 - ranks eligible demo segments with a deterministic, versioned rule set;
@@ -38,9 +39,9 @@ The repository now provides a Python 3.12+ package that:
 - emits explanation-first JSON and Markdown reports from a console command.
 
 This foundation does **not** complete Issue #1 or the real-trip v0.1 vertical slice. It exercises
-the contracts and deterministic rules with synthetic fixtures. The real-trip work still requires
-reviewed shoreline candidates, user-supplied trip inputs, authoritative legal and condition
-evidence, selected code/data licences, and a recorded field test.
+the contracts and deterministic rules with synthetic fixtures and now supports manually prepared
+run files. The real-trip work still requires reviewed shoreline candidates, authoritative legal
+and condition evidence, selected code/data licences, and a recorded field test.
 
 ## Installation
 
@@ -73,14 +74,44 @@ Without `uv`, replace `uv run` with `.venv/bin/python -m` for pytest and use
 
 ```sh
 geoweaver validate-catalogue --catalogue data/catalogue/demo_segments.geojson
-geoweaver rank --catalogue data/catalogue/demo_segments.geojson
-geoweaver rank --catalogue data/catalogue/demo_segments.geojson --format json
-geoweaver rank --catalogue data/catalogue/demo_segments.geojson --format markdown
+geoweaver rank \
+  --catalogue data/catalogue/demo_segments.geojson \
+  --trip data/trips/demo_trip.json \
+  --conditions data/conditions/demo_conditions.json \
+  --travel data/travel/demo_travel.json \
+  --format markdown
+geoweaver demo --format json
 ```
 
-The rank command deliberately uses a fixed, printed synthetic condition snapshot, fixed demo
-preferences, and sourced manual travel estimates from a fictional origin. This keeps results
-reproducible while live data and user-input workflows remain out of scope.
+`rank` requires all three run-input files and never substitutes favourable demonstration values.
+An omitted travel estimate is reported as missing and fails that segment's travel gate. Missing,
+unknown, or overlapping condition applicability is rejected because a location-specific snapshot
+cannot safely be assigned by guesswork. `demo` is an explicit shortcut backed by packaged copies
+of the committed fictional files, so it works independently of the current working directory.
+
+## Input classes
+
+The repository distinguishes three workflows:
+
+- **Synthetic demonstration:** the committed files under `data/catalogue/`, `data/trips/`,
+  `data/conditions/`, and `data/travel/` use fictional values and the `synthetic_demo`
+  classification. They exist only for tests, examples, and regression checks.
+- **Manually sourced real trip:** copy the documented JSON shapes, keep the files private unless
+  deliberate review permits publication, use `manual_user_supplied`, and record real source and
+  retrieval provenance. GeoWeaver validates and reports what was supplied but does not independently
+  verify it. Inferred critical conditions fail their safety gates; legal, closure, health, and
+  travel evidence must also be within the documented freshness limits.
+- **Future live integrations:** weather, warning, tide, daylight, closure, and routing adapters
+  remain future work. The current command performs no API calls, scraping, geocoding, or route
+  calculation.
+
+Format details and controlled values are documented in
+[`data/trips/`](data/trips/README.md), [`data/conditions/`](data/conditions/README.md), and
+[`data/travel/`](data/travel/README.md). Trip and retrieval timestamps must include timezones.
+
+CLI exit codes are stable for automation: `0` means success, `2` means invalid usage or an
+unreadable/invalid catalogue or run-input file, and `3` means validated inputs reached the ranking
+stage but ranking could not be completed.
 
 ## Planned capabilities
 
@@ -108,19 +139,22 @@ tests/          Automated unit and CLI tests
 
 ## Current milestone
 
-**Milestone 0 — Offline scoring foundation**
+**Milestone 1 — User-supplied offline trip inputs**
 
-This foundation exercises the planned vertical-slice architecture against synthetic data; it is
-not the real-trip vertical slice itself. The next milestone is authoritative source research and
-deliberate curation. No demo record should be promoted into a real recommendation without legal,
-safety, licence, provenance, and field review.
+The scorer can now reproduce a run entirely from catalogue, trip, condition, and travel files.
+This is still not the real-trip vertical slice itself. The next milestone is authoritative source
+research and deliberate curation. No demo record should be promoted into a real recommendation
+without legal, safety, licence, provenance, and field review.
 
 ## Current limitations
 
-- Demo conditions, preferences, origin, and travel estimates are fixed and synthetic.
+- Committed conditions, preferences, origin, and travel estimates are fixed and synthetic; real
+  values must be prepared manually outside the repository unless publication is deliberate.
 - There are no live weather, tide, routing, closure, or advisory adapters.
 - There is no frontend, API, authentication, database, scraping, terrain/imagery processing,
   machine learning, or production deployment.
 - Scores express a transparent relative ranking, not catch probability or expected catch.
 - Source licensing and the real catalogue governance process still require decisions.
+- Tide-source location, distance, and assignment evidence are manually supplied and are not
+  independently calculated or geographically verified.
 - Interfaces and schemas may change before the first tagged release.

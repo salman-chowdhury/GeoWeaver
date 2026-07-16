@@ -1,0 +1,113 @@
+{
+  "model_version": "castnet-v0.1.4",
+  "eligible_order": [
+    "demo-alpha-gutter",
+    "demo-beta-sandbar"
+  ],
+  "results": [
+    {
+      "segment_id": "demo-alpha-gutter",
+      "eligible": true,
+      "score": 93,
+      "confidence": 90,
+      "hard_gate_failures": [],
+      "positive_factors": [
+        "Access and usability is a meaningful positive factor (100/100).",
+        "Environmental-condition match is a meaningful positive factor (100/100).",
+        "Family suitability is a meaningful positive factor (100/100)."
+      ],
+      "highest_scoring_components": [],
+      "limitations": [
+        "Travel time is an inferred manual demonstration estimate.",
+        "Travel efficiency is comparatively weak (56/100)."
+      ]
+    },
+    {
+      "segment_id": "demo-beta-sandbar",
+      "eligible": true,
+      "score": 59,
+      "confidence": 62,
+      "hard_gate_failures": [],
+      "positive_factors": [
+        "Privacy is a meaningful positive factor (100/100).",
+        "Access and usability is a meaningful positive factor (70/100).",
+        "Environmental-condition match is a meaningful positive factor (64/100)."
+      ],
+      "highest_scoring_components": [],
+      "limitations": [
+        "Segment attributes are remotely reviewed, not field verified.",
+        "Travel time is an inferred manual demonstration estimate.",
+        "Travel efficiency is comparatively weak (22/100)."
+      ]
+    },
+    {
+      "segment_id": "demo-closed-reach",
+      "eligible": false,
+      "score": 0,
+      "confidence": 90,
+      "hard_gate_failures": [
+        "active_legal_closure"
+      ],
+      "positive_factors": [],
+      "highest_scoring_components": [
+        "Pre-gate component only \u2014 Access and usability scores 100/100; hard-gate failures still make this segment ineligible.",
+        "Pre-gate component only \u2014 Environmental-condition match scores 100/100; hard-gate failures still make this segment ineligible.",
+        "Pre-gate component only \u2014 Family suitability scores 100/100; hard-gate failures still make this segment ineligible."
+      ],
+      "limitations": [
+        "Hard gate \u2014 An active restriction applies: A fictional active closure exists to exercise the legal hard gate.",
+        "Travel time is an inferred manual demonstration estimate."
+      ]
+    },
+    {
+      "segment_id": "demo-narrow-mud-edge",
+      "eligible": false,
+      "score": 0,
+      "confidence": 0,
+      "hard_gate_failures": [
+        "legal_information",
+        "activity_permission",
+        "tidal_eligibility",
+        "health_advisory",
+        "active_legal_closure",
+        "safe_footing",
+        "casting_space",
+        "family_suitability",
+        "travel_time",
+        "critical_safety_information"
+      ],
+      "positive_factors": [],
+      "highest_scoring_components": [
+        "Pre-gate component only \u2014 Privacy scores 100/100; hard-gate failures still make this segment ineligible.",
+        "Pre-gate component only \u2014 Environmental-condition match scores 24/100; hard-gate failures still make this segment ineligible.",
+        "Pre-gate component only \u2014 Family suitability scores 20/100; hard-gate failures still make this segment ineligible."
+      ],
+      "limitations": [
+        "Hard gate \u2014 Critical legal status is unknown; absence of a known closure is not evidence of legality.",
+        "Hard gate \u2014 Permission for the intended activity is unknown; v0.1 fails closed.",
+        "Hard gate \u2014 Tidal eligibility is unknown; v0.1 fails closed."
+      ]
+    },
+    {
+      "segment_id": "demo-unknown-access",
+      "eligible": false,
+      "score": 0,
+      "confidence": 27,
+      "hard_gate_failures": [
+        "public_access"
+      ],
+      "positive_factors": [],
+      "highest_scoring_components": [
+        "Pre-gate component only \u2014 Environmental-condition match scores 100/100; hard-gate failures still make this segment ineligible.",
+        "Pre-gate component only \u2014 Privacy scores 100/100; hard-gate failures still make this segment ineligible.",
+        "Pre-gate component only \u2014 Family suitability scores 80/100; hard-gate failures still make this segment ineligible."
+      ],
+      "limitations": [
+        "Hard gate \u2014 Critical access status is unknown; v0.1 fails closed.",
+        "Segment attributes are remotely reviewed, not field verified.",
+        "Parking availability is unknown."
+      ]
+    }
+  ],
+  "run_id": "run-b4bb42cabe17a90f"
+}

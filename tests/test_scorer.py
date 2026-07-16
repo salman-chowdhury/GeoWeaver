@@ -69,6 +69,46 @@ def test_ranking_is_deterministic(demo_segments: tuple[ShorelineSegment, ...]) -
     assert first.run_id == second.run_id
 
 
+def test_rank_segments_run_id_includes_condition_and_travel_provenance(
+    demo_segments: tuple[ShorelineSegment, ...],
+) -> None:
+    segment = (demo_segments[0],)
+    condition = demonstration_condition()
+    travel = (demonstration_travel_estimates()[0],)
+    baseline = rank_segments(segment, condition, demonstration_preferences(), travel)
+
+    changed_scope = rank_segments(
+        segment,
+        replace(condition, scope_id="different-reviewed-scope"),
+        demonstration_preferences(),
+        travel,
+    )
+    changed_condition_retrieval = rank_segments(
+        segment,
+        replace(condition, retrieved_at=condition.retrieved_at - timedelta(minutes=1)),
+        demonstration_preferences(),
+        travel,
+    )
+    changed_travel_retrieval = rank_segments(
+        segment,
+        condition,
+        demonstration_preferences(),
+        (replace(travel[0], retrieved_at=travel[0].retrieved_at - timedelta(minutes=1)),),
+    )
+
+    assert (
+        len(
+            {
+                baseline.run_id,
+                changed_scope.run_id,
+                changed_condition_retrieval.run_id,
+                changed_travel_retrieval.run_id,
+            }
+        )
+        == 4
+    )
+
+
 def test_equal_suitability_scores_do_not_use_confidence_as_a_tiebreaker(
     demo_segments: tuple[ShorelineSegment, ...],
 ) -> None:
@@ -153,7 +193,15 @@ def test_stale_and_inferred_conditions_reduce_confidence(
     baseline_condition = replace(
         demonstration_condition(), inferred=False, data_freshness_minutes=30
     )
-    weak_condition = replace(demonstration_condition(), inferred=True, data_freshness_minutes=500)
+    weak_condition = replace(
+        demonstration_condition(),
+        inferred=True,
+        data_freshness_minutes=500,
+        weather_status_verified=False,
+        footing_status_verified=False,
+        tide_status_verified=False,
+        daylight_status_verified=False,
+    )
     travel = (demonstration_travel_estimates()[0],)
     baseline = rank_segments((segment,), baseline_condition, demonstration_preferences(), travel)
     weak = rank_segments((segment,), weak_condition, demonstration_preferences(), travel)
@@ -180,9 +228,17 @@ def test_score_and_confidence_are_reported_separately(
 def test_inferred_conditions_cannot_receive_high_confidence(
     demo_segments: tuple[ShorelineSegment, ...],
 ) -> None:
+    condition = replace(
+        demonstration_condition(),
+        inferred=True,
+        weather_status_verified=False,
+        footing_status_verified=False,
+        tide_status_verified=False,
+        daylight_status_verified=False,
+    )
     run = rank_segments(
         (demo_segments[0],),
-        demonstration_condition(),
+        condition,
         demonstration_preferences(),
         (demonstration_travel_estimates()[0],),
     )
@@ -284,7 +340,14 @@ def test_evidence_diagnostics_affect_confidence_not_suitability(
 ) -> None:
     segment = demo_segments[0]
     strong_condition = replace(demonstration_condition(), inferred=False)
-    inferred_condition = replace(strong_condition, inferred=True)
+    inferred_condition = replace(
+        strong_condition,
+        inferred=True,
+        weather_status_verified=False,
+        footing_status_verified=False,
+        tide_status_verified=False,
+        daylight_status_verified=False,
+    )
     travel = replace(demonstration_travel_estimates()[0], inferred=False)
 
     strong = rank_segments(
@@ -295,7 +358,10 @@ def test_evidence_diagnostics_affect_confidence_not_suitability(
     ).recommendations[0]
 
     assert inferred.score.data_quality < strong.score.data_quality
-    assert inferred.score.final_score == strong.score.final_score
+    assert (
+        inferred.score.suitability_component_scores() == strong.score.suitability_component_scores()
+    )
+    assert inferred.score.final_score == 0
     assert inferred.confidence_score < strong.confidence_score
 
 
@@ -511,7 +577,7 @@ def test_missing_critical_condition_information_cannot_receive_high_confidence(
     assert recommendation.confidence_band is ConfidenceBand.LOW
 
 
-def test_castnet_v0_1_3_demo_ranking_matches_versioned_golden(
+def test_castnet_v0_1_4_demo_ranking_matches_versioned_golden(
     demo_segments: tuple[ShorelineSegment, ...],
 ) -> None:
     run = rank_segments(
@@ -541,7 +607,7 @@ def test_castnet_v0_1_3_demo_ranking_matches_versioned_golden(
             key=lambda result: result["segment_id"],
         ),
     }
-    expected = json.loads((FIXTURES / "castnet_v0_1_3_golden.json").read_text(encoding="utf-8"))
+    expected = json.loads((FIXTURES / "castnet_v0_1_4_golden.json").read_text(encoding="utf-8"))
     expected["results"] = sorted(expected["results"], key=lambda result: result["segment_id"])
 
     assert actual == expected

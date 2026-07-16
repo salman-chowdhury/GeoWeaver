@@ -1,22 +1,27 @@
 """Immutable, validated domain models for the GeoWeaver v0.1 slice."""
 
 import math
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import StrEnum
 
 from geoweaver.domain.enums import (
     ActivityPermissionStatus,
     BankSlopeClass,
+    ConditionScopeType,
     ConfidenceBand,
+    DataClassification,
+    EvidenceState,
     GeometryType,
     HabitatFeature,
+    IntendedActivity,
     PublicAccessState,
     RestrictionStatus,
     ShorelineType,
     SkillLevel,
     Substrate,
     TidalStatus,
+    TideAssignmentMethod,
     TideStage,
     VerificationState,
 )
@@ -177,12 +182,18 @@ class Restriction:
     effective_from: datetime | None
     effective_to: datetime | None
     retrieved_at: datetime
+    evidence_state: EvidenceState
 
     def __post_init__(self) -> None:
         object.__setattr__(
             self,
             "status",
             _coerce_enum(self.status, RestrictionStatus, "restriction status"),
+        )
+        object.__setattr__(
+            self,
+            "evidence_state",
+            _coerce_enum(self.evidence_state, EvidenceState, "evidence_state"),
         )
         for field_name in (
             "restriction_id",
@@ -214,6 +225,68 @@ class Restriction:
 
 
 @dataclass(frozen=True, slots=True)
+class SourceProvenance:
+    """Auditable source evidence for a stable legal or access assertion."""
+
+    authority: str
+    source_ref: str
+    retrieved_at: datetime
+    evidence_state: EvidenceState
+
+    def __post_init__(self) -> None:
+        _require_text(self.authority, "authority")
+        _require_text(self.source_ref, "source_ref")
+        _require_aware_datetime(self.retrieved_at, "retrieved_at")
+        object.__setattr__(
+            self,
+            "evidence_state",
+            _coerce_enum(self.evidence_state, EvidenceState, "evidence_state"),
+        )
+
+
+@dataclass(frozen=True, slots=True)
+class TideSourceApplicability:
+    """Manual, auditable assignment of a tide source to a condition scope."""
+
+    source_location_id: str
+    source_location_label: str
+    distance_to_scope_km: float
+    assignment_method: TideAssignmentMethod
+    applicability_source_ref: str
+    retrieved_at: datetime
+    evidence_state: EvidenceState
+
+    def __post_init__(self) -> None:
+        for field_name in (
+            "source_location_id",
+            "source_location_label",
+            "applicability_source_ref",
+        ):
+            _require_text(getattr(self, field_name), field_name)
+        if isinstance(self.distance_to_scope_km, bool) or not isinstance(
+            self.distance_to_scope_km, (int, float)
+        ):
+            raise ValueError("distance_to_scope_km must be a number")
+        if not math.isfinite(self.distance_to_scope_km) or self.distance_to_scope_km < 0:
+            raise ValueError("distance_to_scope_km must be finite and zero or greater")
+        object.__setattr__(
+            self,
+            "assignment_method",
+            _coerce_enum(
+                self.assignment_method,
+                TideAssignmentMethod,
+                "assignment_method",
+            ),
+        )
+        object.__setattr__(
+            self,
+            "evidence_state",
+            _coerce_enum(self.evidence_state, EvidenceState, "evidence_state"),
+        )
+        _require_aware_datetime(self.retrieved_at, "retrieved_at")
+
+
+@dataclass(frozen=True, slots=True)
 class ShorelineSegment:
     """Canonical stable record loaded from the v0.1 GeoJSON catalogue."""
 
@@ -229,12 +302,15 @@ class ShorelineSegment:
     environmental: EnvironmentalProfile
     verification_status: VerificationState
     activity_permission_status: ActivityPermissionStatus
+    activity_permission_evidence: SourceProvenance
     tidal_status: TidalStatus
     health_advisory_status: RestrictionStatus
     health_advisory_evidence: Restriction
     legal_status_known: bool
+    legal_status_evidence: SourceProvenance
     safety_information_complete: bool
     restrictions: tuple[Restriction, ...]
+    restriction_review_evidence: SourceProvenance
     source_refs: tuple[str, ...]
     last_updated: datetime
 
@@ -288,15 +364,30 @@ class ConditionSnapshot:
     footing_source_refs: tuple[str, ...]
     tide_source_refs: tuple[str, ...]
     daylight_source_refs: tuple[str, ...]
+    retrieved_at: datetime | None = field(default=None, repr=False)
+    scope_type: ConditionScopeType = field(
+        default=ConditionScopeType.EXPLICIT_SEGMENT_GROUP,
+        repr=False,
+    )
+    scope_id: str = field(default="legacy-condition-scope", repr=False)
+    tide_source_applicability: TideSourceApplicability | None = None
 
     def __post_init__(self) -> None:
         _require_text(self.snapshot_id, "snapshot_id")
+        _require_text(self.scope_id, "scope_id")
+        object.__setattr__(
+            self,
+            "scope_type",
+            _coerce_enum(self.scope_type, ConditionScopeType, "scope_type"),
+        )
         _require_source_refs(
             self.applicable_segment_ids,
             "applicable_segment_ids",
             require_items=True,
         )
         _require_aware_datetime(self.valid_at, "valid_at")
+        if self.retrieved_at is not None:
+            _require_aware_datetime(self.retrieved_at, "retrieved_at")
         object.__setattr__(
             self,
             "tide_stage",
@@ -313,6 +404,15 @@ class ConditionSnapshot:
         _require_bool(self.footing_status_verified, "footing_status_verified")
         _require_bool(self.tide_status_verified, "tide_status_verified")
         _require_bool(self.daylight_status_verified, "daylight_status_verified")
+        if self.inferred and any(
+            (
+                self.weather_status_verified,
+                self.footing_status_verified,
+                self.tide_status_verified,
+                self.daylight_status_verified,
+            )
+        ):
+            raise ValueError("inferred condition evidence must not be marked verified")
         for field_name in (
             "weather_source_refs",
             "footing_source_refs",
@@ -360,6 +460,11 @@ class ConditionSnapshot:
         )
         return tuple(dict.fromkeys(combined))
 
+    @property
+    def evidence_state(self) -> EvidenceState:
+        """Return the snapshot's explicitly declared inference state."""
+        return EvidenceState.INFERRED if self.inferred else EvidenceState.VERIFIED
+
 
 @dataclass(frozen=True, slots=True)
 class UserPreferences:
@@ -406,6 +511,7 @@ class TravelEstimate:
     minutes: int
     source_ref: str
     inferred: bool
+    retrieved_at: datetime | None = field(default=None, repr=False)
 
     def __post_init__(self) -> None:
         for field_name in ("segment_id", "origin_label", "source_ref"):
@@ -415,6 +521,88 @@ class TravelEstimate:
         if self.minutes < 0:
             raise ValueError("travel minutes must be zero or greater")
         _require_bool(self.inferred, "inferred")
+        if self.retrieved_at is not None:
+            _require_aware_datetime(self.retrieved_at, "retrieved_at")
+
+    @property
+    def evidence_state(self) -> EvidenceState:
+        """Return the estimate's explicitly declared inference state."""
+        return EvidenceState.INFERRED if self.inferred else EvidenceState.VERIFIED
+
+
+@dataclass(frozen=True, slots=True)
+class TripRequest:
+    """Typed user-supplied constraints for one reproducible recommendation run."""
+
+    run_id: str | None
+    origin_label: str
+    target_datetime: datetime
+    maximum_travel_minutes: int
+    skill_level: SkillLevel
+    family_suitability_required: bool
+    minimum_family_rating: int
+    desired_privacy_rating: int
+    minimum_casting_space_rating: int
+    intended_activity: IntendedActivity
+    minimum_usable_daylight_minutes: int
+    notes: str | None
+    data_classification: DataClassification
+
+    def __post_init__(self) -> None:
+        if self.run_id is not None:
+            _require_text(self.run_id, "run_id")
+        _require_text(self.origin_label, "origin_label")
+        _require_aware_datetime(self.target_datetime, "target_datetime")
+        object.__setattr__(
+            self,
+            "skill_level",
+            _coerce_enum(self.skill_level, SkillLevel, "skill_level"),
+        )
+        object.__setattr__(
+            self,
+            "intended_activity",
+            _coerce_enum(self.intended_activity, IntendedActivity, "intended_activity"),
+        )
+        object.__setattr__(
+            self,
+            "data_classification",
+            _coerce_enum(
+                self.data_classification,
+                DataClassification,
+                "data_classification",
+            ),
+        )
+        _require_bool(self.family_suitability_required, "family_suitability_required")
+        _require_rating(self.minimum_family_rating, "minimum_family_rating")
+        _require_rating(self.desired_privacy_rating, "desired_privacy_rating")
+        _require_rating(self.minimum_casting_space_rating, "minimum_casting_space_rating")
+        if isinstance(self.maximum_travel_minutes, bool) or not isinstance(
+            self.maximum_travel_minutes, int
+        ):
+            raise ValueError("maximum_travel_minutes must be an integer")
+        if not 0 <= self.maximum_travel_minutes <= 1440:
+            raise ValueError("maximum_travel_minutes must be from 0 to 1440")
+        if isinstance(self.minimum_usable_daylight_minutes, bool) or not isinstance(
+            self.minimum_usable_daylight_minutes, int
+        ):
+            raise ValueError("minimum_usable_daylight_minutes must be an integer")
+        if not 0 <= self.minimum_usable_daylight_minutes <= 1440:
+            raise ValueError("minimum_usable_daylight_minutes must be from 0 to 1440")
+        if self.notes is not None and not isinstance(self.notes, str):
+            raise ValueError("notes must be a string or null")
+
+    @property
+    def preferences(self) -> UserPreferences:
+        """Adapt the request to the existing versioned scorer contract."""
+        return UserPreferences(
+            skill_level=self.skill_level,
+            require_family_suitable=self.family_suitability_required,
+            minimum_family_suitability=self.minimum_family_rating,
+            minimum_casting_space_rating=self.minimum_casting_space_rating,
+            minimum_usable_daylight_minutes=self.minimum_usable_daylight_minutes,
+            desired_privacy_rating=self.desired_privacy_rating,
+            maximum_travel_minutes=self.maximum_travel_minutes,
+        )
 
 
 @dataclass(frozen=True, slots=True)
@@ -505,12 +693,19 @@ class RankedRecommendation:
     missing_or_stale_information: tuple[str, ...]
     applicable_restrictions: tuple[Restriction, ...]
     health_advisory_evidence: Restriction
+    legal_status_evidence: SourceProvenance
+    activity_permission_evidence: SourceProvenance
+    restriction_review_evidence: SourceProvenance
     verification_status: VerificationState
     source_refs: tuple[str, ...]
     data_last_updated: datetime
     travel_time_minutes: int | None
     travel_origin: str | None
     model_version: str
+    condition_snapshot_id: str | None = None
+    travel_source_ref: str | None = None
+    travel_retrieved_at: datetime | None = None
+    travel_evidence_state: EvidenceState | None = None
 
     def __post_init__(self) -> None:
         object.__setattr__(
@@ -541,6 +736,22 @@ class RankedRecommendation:
                 raise ValueError("travel_time_minutes must be zero or greater")
         if self.travel_origin is not None:
             _require_text(self.travel_origin, "travel_origin")
+        if self.condition_snapshot_id is not None:
+            _require_text(self.condition_snapshot_id, "condition_snapshot_id")
+        if self.travel_source_ref is not None:
+            _require_text(self.travel_source_ref, "travel_source_ref")
+        if self.travel_retrieved_at is not None:
+            _require_aware_datetime(self.travel_retrieved_at, "travel_retrieved_at")
+        if self.travel_evidence_state is not None:
+            object.__setattr__(
+                self,
+                "travel_evidence_state",
+                _coerce_enum(
+                    self.travel_evidence_state,
+                    EvidenceState,
+                    "travel_evidence_state",
+                ),
+            )
 
 
 @dataclass(frozen=True, slots=True)
@@ -556,8 +767,23 @@ class RecommendationRun:
     travel_estimates: tuple[TravelEstimate, ...]
     recommendations: tuple[RankedRecommendation, ...]
     demonstration_notice: str
+    trip_request: TripRequest | None = None
+    condition_snapshots: tuple[ConditionSnapshot, ...] = ()
+    input_classification: DataClassification = DataClassification.SYNTHETIC_DEMO
+    limitations: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         for field_name in ("run_id", "application", "model_version", "demonstration_notice"):
             _require_text(getattr(self, field_name), field_name)
         _require_aware_datetime(self.generated_at, "generated_at")
+        object.__setattr__(
+            self,
+            "input_classification",
+            _coerce_enum(
+                self.input_classification,
+                DataClassification,
+                "input_classification",
+            ),
+        )
+        if not self.condition_snapshots:
+            object.__setattr__(self, "condition_snapshots", (self.condition,))

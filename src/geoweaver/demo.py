@@ -2,12 +2,23 @@
 
 from datetime import UTC, datetime
 
-from geoweaver.domain.enums import SkillLevel, TideStage
-from geoweaver.domain.models import ConditionSnapshot, TravelEstimate, UserPreferences
+from geoweaver.domain.enums import (
+    ConditionScopeType,
+    EvidenceState,
+    SkillLevel,
+    TideAssignmentMethod,
+    TideStage,
+)
+from geoweaver.domain.models import (
+    ConditionSnapshot,
+    TideSourceApplicability,
+    TravelEstimate,
+    UserPreferences,
+)
 
 
 def demonstration_condition() -> ConditionSnapshot:
-    """Return deterministic, explicitly inferred conditions for the v0.1 demo."""
+    """Return deterministic conditions verified within the fictional v0.1 fixture."""
     return ConditionSnapshot(
         snapshot_id="demo-conditions-v0.1",
         applicable_segment_ids=(
@@ -26,7 +37,7 @@ def demonstration_condition() -> ConditionSnapshot:
         wind_speed_kph=14.0,
         gust_speed_kph=22.0,
         data_freshness_minutes=60,
-        inferred=True,
+        inferred=False,
         weather_status_verified=True,
         footing_status_verified=True,
         tide_status_verified=True,
@@ -35,6 +46,18 @@ def demonstration_condition() -> ConditionSnapshot:
         footing_source_refs=("demo://synthetic/footing/v0.1",),
         tide_source_refs=("demo://synthetic/tide/v0.1",),
         daylight_source_refs=("demo://synthetic/daylight/v0.1",),
+        retrieved_at=datetime(2026, 1, 15, 5, 0, tzinfo=UTC),
+        scope_type=ConditionScopeType.EXPLICIT_SEGMENT_GROUP,
+        scope_id="fictional-demo-catalogue",
+        tide_source_applicability=TideSourceApplicability(
+            source_location_id="demo-tide-station-v0.1",
+            source_location_label="Fictional station for the synthetic catalogue",
+            distance_to_scope_km=0.0,
+            assignment_method=TideAssignmentMethod.MANUALLY_REVIEWED,
+            applicability_source_ref="demo://synthetic/tide/v0.1",
+            retrieved_at=datetime(2026, 1, 15, 5, 0, tzinfo=UTC),
+            evidence_state=EvidenceState.VERIFIED,
+        ),
     )
 
 
@@ -62,6 +85,7 @@ def demonstration_travel_estimates() -> tuple[TravelEstimate, ...]:
             minutes=minutes,
             source_ref=source,
             inferred=True,
+            retrieved_at=datetime(2026, 1, 14, 12, 0, tzinfo=UTC),
         )
         for segment_id, minutes in (
             ("demo-alpha-gutter", 20),

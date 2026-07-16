@@ -13,6 +13,7 @@ from geoweaver.demo import (
 from geoweaver.domain.enums import (
     ActivityPermissionStatus,
     BankSlopeClass,
+    EvidenceState,
     PublicAccessState,
     RestrictionStatus,
     TidalStatus,
@@ -22,6 +23,7 @@ from geoweaver.scoring.constraints import (
     MAX_CRITICAL_SEGMENT_AGE,
     MAX_SAFE_GUST_KPH,
     MAX_SAFE_SUSTAINED_WIND_KPH,
+    MAX_TRAVEL_ESTIMATE_AGE,
     evaluate_constraints,
 )
 
@@ -120,6 +122,11 @@ def test_unknown_restriction_status_fails_closed(
         ({"footing_status_verified": False}, "safe_footing"),
         ({"data_freshness_minutes": 121}, "severe_weather"),
         ({"weather_source_refs": ()}, "severe_weather"),
+        ({"retrieved_at": None}, "severe_weather"),
+        (
+            {"retrieved_at": demonstration_condition().retrieved_at - timedelta(minutes=1)},
+            "severe_weather",
+        ),
         ({"usable_daylight_minutes": 30}, "usable_daylight"),
         ({"usable_daylight_minutes": None}, "usable_daylight"),
         ({"tide_status_verified": False}, "tide_condition"),
@@ -422,6 +429,124 @@ def test_health_advisory_evidence_must_apply_at_run_time(
     )
 
     assert "health_advisory" in {failure.gate for failure in result.failures}
+
+
+@pytest.mark.parametrize(
+    ("field_name", "expected_gate"),
+    (
+        ("legal_status_evidence", "legal_information"),
+        ("activity_permission_evidence", "activity_permission"),
+        ("restriction_review_evidence", "active_legal_closure"),
+    ),
+)
+def test_stale_legal_provenance_fails_closed(
+    demo_segments: tuple[ShorelineSegment, ...],
+    field_name: str,
+    expected_gate: str,
+) -> None:
+    condition = demonstration_condition()
+    original = _segment_by_id(demo_segments, "demo-beta-sandbar")
+    evidence = replace(
+        getattr(original, field_name),
+        retrieved_at=condition.valid_at - MAX_CRITICAL_SEGMENT_AGE - timedelta(seconds=1),
+    )
+    segment = replace(original, **{field_name: evidence})
+
+    result = evaluate_constraints(
+        segment, condition, demonstration_preferences(), _travel_for(segment.segment_id)
+    )
+
+    assert expected_gate in {failure.gate for failure in result.failures}
+
+
+def test_stale_health_and_restriction_evidence_fail_closed(
+    demo_segments: tuple[ShorelineSegment, ...],
+) -> None:
+    condition = demonstration_condition()
+    original = _segment_by_id(demo_segments, "demo-alpha-gutter")
+    stale_time = condition.valid_at - MAX_CRITICAL_SEGMENT_AGE - timedelta(seconds=1)
+
+    stale_health = replace(
+        original,
+        health_advisory_evidence=replace(
+            original.health_advisory_evidence,
+            retrieved_at=stale_time,
+        ),
+    )
+    stale_restriction = replace(
+        original,
+        restrictions=(replace(original.restrictions[0], retrieved_at=stale_time),),
+    )
+
+    health_result = evaluate_constraints(
+        stale_health,
+        condition,
+        demonstration_preferences(),
+        _travel_for(original.segment_id),
+    )
+    restriction_result = evaluate_constraints(
+        stale_restriction,
+        condition,
+        demonstration_preferences(),
+        _travel_for(original.segment_id),
+    )
+
+    assert "health_advisory" in {failure.gate for failure in health_result.failures}
+    assert "active_legal_closure" in {failure.gate for failure in restriction_result.failures}
+
+
+def test_inferred_health_and_restriction_evidence_fail_closed(
+    demo_segments: tuple[ShorelineSegment, ...],
+) -> None:
+    condition = demonstration_condition()
+    original = _segment_by_id(demo_segments, "demo-alpha-gutter")
+    inferred_health = replace(
+        original,
+        health_advisory_evidence=replace(
+            original.health_advisory_evidence,
+            evidence_state=EvidenceState.INFERRED,
+        ),
+    )
+    inferred_restriction = replace(
+        original,
+        restrictions=(
+            replace(
+                original.restrictions[0],
+                evidence_state=EvidenceState.INFERRED,
+            ),
+        ),
+    )
+
+    health_result = evaluate_constraints(
+        inferred_health,
+        condition,
+        demonstration_preferences(),
+        _travel_for(original.segment_id),
+    )
+    restriction_result = evaluate_constraints(
+        inferred_restriction,
+        condition,
+        demonstration_preferences(),
+        _travel_for(original.segment_id),
+    )
+
+    assert "health_advisory" in {failure.gate for failure in health_result.failures}
+    assert "active_legal_closure" in {failure.gate for failure in restriction_result.failures}
+
+
+def test_stale_travel_estimate_fails_closed(
+    demo_segments: tuple[ShorelineSegment, ...],
+) -> None:
+    condition = demonstration_condition()
+    segment = _segment_by_id(demo_segments, "demo-alpha-gutter")
+    travel = replace(
+        _travel_for(segment.segment_id),
+        retrieved_at=condition.valid_at - MAX_TRAVEL_ESTIMATE_AGE - timedelta(seconds=1),
+    )
+
+    result = evaluate_constraints(segment, condition, demonstration_preferences(), travel)
+
+    assert "travel_time" in {failure.gate for failure in result.failures}
 
 
 @pytest.mark.parametrize(

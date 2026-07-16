@@ -1,0 +1,17 @@
+{
+  "schema_version": "geoweaver-trip-v0.1",
+  "data_classification": "synthetic_demo",
+  "run_id": "demo-weekend-run-v0.1",
+  "origin_label": "Fictional Demo Origin",
+  "target_datetime": "2026-01-15T06:00:00+00:00",
+  "maximum_travel_minutes": 45,
+  "skill_level": "novice",
+  "family_suitability_required": true,
+  "minimum_family_rating": 3,
+  "desired_privacy_rating": 3,
+  "minimum_casting_space_rating": 3,
+  "intended_activity": "cast_net_fishing",
+  "minimum_usable_daylight_minutes": 60,
+  "notes": "Fictional values for deterministic tests and documentation only."
+}
+

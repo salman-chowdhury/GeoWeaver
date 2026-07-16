@@ -9,6 +9,7 @@ from typing import cast
 from geoweaver.domain.enums import (
     ActivityPermissionStatus,
     BankSlopeClass,
+    EvidenceState,
     GeometryType,
     HabitatFeature,
     PublicAccessState,
@@ -26,6 +27,7 @@ from geoweaver.domain.models import (
     Position,
     Restriction,
     ShorelineSegment,
+    SourceProvenance,
 )
 
 
@@ -45,6 +47,7 @@ REQUIRED_PROPERTIES = frozenset(
         "public_access_status",
         "verification_status",
         "activity_permission_status",
+        "activity_permission_evidence",
         "tidal_status",
         "health_advisory_status",
         "health_advisory_evidence",
@@ -60,8 +63,10 @@ REQUIRED_PROPERTIES = frozenset(
         "habitat_features",
         "preferred_tide_stages",
         "legal_status_known",
+        "legal_status_evidence",
         "safety_information_complete",
         "restrictions",
+        "restriction_review_evidence",
         "source_refs",
         "last_updated",
     }
@@ -189,6 +194,28 @@ def _geometry(value: object, context: str) -> Geometry:
 
 def _restriction(value: object, context: str) -> Restriction:
     restriction = _mapping(value, context)
+    required = frozenset(
+        {
+            "restriction_id",
+            "restriction_type",
+            "status",
+            "authority",
+            "source_ref",
+            "reason",
+            "effective_from",
+            "effective_to",
+            "retrieved_at",
+            "evidence_state",
+        }
+    )
+    missing = sorted(required.difference(restriction))
+    if missing:
+        raise CatalogueValidationError(
+            f"{context} is missing required fields: {', '.join(missing)}"
+        )
+    unknown = sorted(set(restriction).difference(required))
+    if unknown:
+        raise CatalogueValidationError(f"{context} has unknown fields: {', '.join(unknown)}")
     return Restriction(
         restriction_id=_text(restriction.get("restriction_id"), f"{context}.restriction_id"),
         restriction_type=_text(restriction.get("restriction_type"), f"{context}.restriction_type"),
@@ -203,6 +230,34 @@ def _restriction(value: object, context: str) -> Restriction:
             restriction.get("effective_to"), f"{context}.effective_to"
         ),
         retrieved_at=_timestamp(restriction.get("retrieved_at"), f"{context}.retrieved_at"),
+        evidence_state=_enum_value(
+            EvidenceState,
+            restriction.get("evidence_state"),
+            f"{context}.evidence_state",
+        ),
+    )
+
+
+def _source_provenance(value: object, context: str) -> SourceProvenance:
+    provenance = _mapping(value, context)
+    required = frozenset({"authority", "source_ref", "retrieved_at", "evidence_state"})
+    missing = sorted(required.difference(provenance))
+    if missing:
+        raise CatalogueValidationError(
+            f"{context} is missing required fields: {', '.join(missing)}"
+        )
+    unknown = sorted(set(provenance).difference(required))
+    if unknown:
+        raise CatalogueValidationError(f"{context} has unknown fields: {', '.join(unknown)}")
+    return SourceProvenance(
+        authority=_text(provenance["authority"], f"{context}.authority"),
+        source_ref=_text(provenance["source_ref"], f"{context}.source_ref"),
+        retrieved_at=_timestamp(provenance["retrieved_at"], f"{context}.retrieved_at"),
+        evidence_state=_enum_value(
+            EvidenceState,
+            provenance["evidence_state"],
+            f"{context}.evidence_state",
+        ),
     )
 
 
@@ -331,6 +386,10 @@ def _segment(feature: object, index: int) -> ShorelineSegment:
                 properties["activity_permission_status"],
                 f"{context}.properties.activity_permission_status",
             ),
+            activity_permission_evidence=_source_provenance(
+                properties["activity_permission_evidence"],
+                f"{context}.properties.activity_permission_evidence",
+            ),
             tidal_status=_enum_value(
                 TidalStatus,
                 properties["tidal_status"],
@@ -348,12 +407,20 @@ def _segment(feature: object, index: int) -> ShorelineSegment:
             legal_status_known=_boolean(
                 properties["legal_status_known"], f"{context}.properties.legal_status_known"
             ),
+            legal_status_evidence=_source_provenance(
+                properties["legal_status_evidence"],
+                f"{context}.properties.legal_status_evidence",
+            ),
             safety_information_complete=_boolean(
                 properties["safety_information_complete"],
                 f"{context}.properties.safety_information_complete",
             ),
             restrictions=_restrictions(
                 properties["restrictions"], f"{context}.properties.restrictions"
+            ),
+            restriction_review_evidence=_source_provenance(
+                properties["restriction_review_evidence"],
+                f"{context}.properties.restriction_review_evidence",
             ),
             source_refs=_string_tuple(
                 properties["source_refs"],

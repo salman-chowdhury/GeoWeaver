@@ -9,12 +9,14 @@ from geoweaver.domain.enums import (
     ActivityPermissionStatus,
     BankSlopeClass,
     ConfidenceBand,
+    EvidenceState,
     HabitatFeature,
     PublicAccessState,
     RestrictionStatus,
     SkillLevel,
     Substrate,
     TidalStatus,
+    TideAssignmentMethod,
     TideStage,
     VerificationState,
 )
@@ -30,11 +32,12 @@ from geoweaver.domain.models import (
 )
 from geoweaver.scoring.constraints import (
     MAX_CRITICAL_SEGMENT_AGE,
+    MAX_TRAVEL_ESTIMATE_AGE,
     evaluate_constraints,
 )
 from geoweaver.scoring.explanations import build_explanations
 
-MODEL_VERSION: Final = "castnet-v0.1.3"
+MODEL_VERSION: Final = "castnet-v0.1.4"
 DEMONSTRATION_NOTICE: Final = (
     "Demonstration only: catalogue locations and conditions are synthetic and are not real "
     "fishing recommendations or substitutes for official safety and legal advice."
@@ -258,12 +261,26 @@ def _missing_or_stale_information(
         missing.append("No preferred tide stages are recorded.")
     if not segment.legal_status_known:
         missing.append("Legal status is unknown.")
+    for label, provenance in (
+        ("Legal-status", segment.legal_status_evidence),
+        ("Activity-permission", segment.activity_permission_evidence),
+        ("Closure-review", segment.restriction_review_evidence),
+    ):
+        age = condition.valid_at - provenance.retrieved_at
+        if provenance.evidence_state is EvidenceState.INFERRED:
+            missing.append(f"{label} provenance is inferred.")
+        if age.total_seconds() < 0:
+            missing.append(f"{label} provenance postdates the recommendation time.")
+        elif age > MAX_CRITICAL_SEGMENT_AGE:
+            missing.append(f"{label} provenance is stale ({age.days} days old).")
     if segment.activity_permission_status is ActivityPermissionStatus.UNKNOWN:
         missing.append("Permission for the intended activity is unknown.")
     if segment.tidal_status is TidalStatus.UNKNOWN:
         missing.append("Tidal eligibility is unknown.")
     if segment.health_advisory_status is RestrictionStatus.UNKNOWN:
         missing.append("Health-advisory status is unknown.")
+    if segment.health_advisory_evidence.evidence_state is EvidenceState.INFERRED:
+        missing.append("Health-advisory evidence is inferred.")
     applicable_restrictions = tuple(
         restriction
         for restriction in segment.restrictions
@@ -273,14 +290,30 @@ def _missing_or_stale_information(
         restriction.status is RestrictionStatus.UNKNOWN for restriction in applicable_restrictions
     ):
         missing.append("At least one applicable restriction has unknown status.")
+    if any(
+        restriction.evidence_state is EvidenceState.INFERRED
+        for restriction in applicable_restrictions
+    ):
+        missing.append("Applicable restriction evidence is inferred.")
     if segment.health_advisory_evidence.retrieved_at > condition.valid_at:
         missing.append("Health-advisory evidence postdates the recommendation time.")
     elif not segment.health_advisory_evidence.is_effective_at(condition.valid_at):
         missing.append("Health-advisory evidence is not applicable at the recommendation time.")
+    elif (
+        condition.valid_at - segment.health_advisory_evidence.retrieved_at
+        > MAX_CRITICAL_SEGMENT_AGE
+    ):
+        age = condition.valid_at - segment.health_advisory_evidence.retrieved_at
+        missing.append(f"Health-advisory evidence is stale ({age.days} days old).")
     if any(
         restriction.retrieved_at > condition.valid_at for restriction in applicable_restrictions
     ):
         missing.append("Applicable restriction evidence postdates the recommendation time.")
+    if any(
+        condition.valid_at - restriction.retrieved_at > MAX_CRITICAL_SEGMENT_AGE
+        for restriction in applicable_restrictions
+    ):
+        missing.append("Applicable restriction evidence is stale.")
     if not segment.safety_information_complete:
         missing.append("Critical stable safety information is incomplete.")
     if condition.tide_stage is TideStage.UNKNOWN:
@@ -303,6 +336,17 @@ def _missing_or_stale_information(
         missing.append(
             f"Condition snapshot is stale ({condition.data_freshness_minutes} minutes old)."
         )
+    if condition.retrieved_at is None:
+        missing.append("Condition retrieval timestamp is missing.")
+    else:
+        actual_condition_age = condition.valid_at - condition.retrieved_at
+        if actual_condition_age.total_seconds() < 0:
+            missing.append("Condition retrieval timestamp postdates the recommendation time.")
+        elif (
+            condition.data_freshness_minutes is not None
+            and int(actual_condition_age.total_seconds() // 60) != condition.data_freshness_minutes
+        ):
+            missing.append("Condition freshness conflicts with its retrieval timestamp.")
     if condition.inferred:
         missing.append("Condition snapshot is explicitly marked as inferred demonstration data.")
     if not condition.weather_status_verified:
@@ -319,6 +363,22 @@ def _missing_or_stale_information(
         missing.append("Footing status has no source references.")
     if not condition.tide_source_refs:
         missing.append("Tide status has no source references.")
+    tide_applicability = condition.tide_source_applicability
+    if tide_applicability is None:
+        missing.append("Tide-source applicability provenance is missing.")
+    else:
+        applicability_age = condition.valid_at - tide_applicability.retrieved_at
+        if (
+            tide_applicability.evidence_state is EvidenceState.INFERRED
+            or tide_applicability.assignment_method is TideAssignmentMethod.INFERRED
+        ):
+            missing.append("Tide-source applicability is inferred.")
+        if tide_applicability.applicability_source_ref not in condition.tide_source_refs:
+            missing.append("Tide-source applicability is not linked to tide evidence.")
+        if applicability_age.total_seconds() < 0:
+            missing.append("Tide-source applicability postdates the recommendation time.")
+        elif applicability_age.total_seconds() / 60 > STALE_AFTER_MINUTES:
+            missing.append("Tide-source applicability is stale.")
     if not condition.daylight_source_refs:
         missing.append("Daylight status has no source references.")
     segment_age = condition.valid_at - segment.last_updated
@@ -328,8 +388,17 @@ def _missing_or_stale_information(
         missing.append(f"Segment evidence is stale ({segment_age.days} days old).")
     if travel_estimate is None:
         missing.append("Travel time is missing.")
-    elif travel_estimate.inferred:
-        missing.append("Travel time is an inferred manual demonstration estimate.")
+    else:
+        if travel_estimate.inferred:
+            missing.append("Travel time is an inferred manual demonstration estimate.")
+        if travel_estimate.retrieved_at is None:
+            missing.append("Travel estimate retrieval time is missing.")
+        else:
+            travel_age = condition.valid_at - travel_estimate.retrieved_at
+            if travel_age.total_seconds() < 0:
+                missing.append("Travel estimate postdates the recommendation time.")
+            elif travel_age > MAX_TRAVEL_ESTIMATE_AGE:
+                missing.append(f"Travel estimate is stale ({travel_age.days} days old).")
     return tuple(missing)
 
 
@@ -407,6 +476,17 @@ def _confidence(
         confidence -= 15
     elif travel_estimate.inferred:
         confidence -= 5
+    if any(
+        "provenance is inferred" in item
+        or "evidence is inferred" in item
+        or "provenance postdates" in item
+        or "provenance is stale" in item
+        or "evidence is stale" in item
+        or item.startswith("Tide-source applicability")
+        or item.startswith("Travel estimate")
+        for item in missing_or_stale_information
+    ):
+        confidence -= 20
     confidence = max(0, min(100, confidence))
     critical_information_missing = (
         segment.access.public_access_status is PublicAccessState.UNKNOWN
@@ -437,6 +517,14 @@ def _confidence(
         or condition.tide_stage is TideStage.UNKNOWN
         or condition.data_freshness_minutes is None
         or condition.data_freshness_minutes > STALE_AFTER_MINUTES
+        or condition.retrieved_at is None
+        or (condition.retrieved_at is not None and condition.retrieved_at > condition.valid_at)
+        or (
+            condition.retrieved_at is not None
+            and condition.data_freshness_minutes is not None
+            and int((condition.valid_at - condition.retrieved_at).total_seconds() // 60)
+            != condition.data_freshness_minutes
+        )
         or not condition.weather_status_verified
         or not condition.footing_status_verified
         or not condition.tide_status_verified
@@ -446,6 +534,16 @@ def _confidence(
         or not condition.tide_source_refs
         or not condition.daylight_source_refs
         or travel_estimate is None
+        or any(
+            "provenance is inferred" in item
+            or "evidence is inferred" in item
+            or "provenance postdates" in item
+            or "provenance is stale" in item
+            or "evidence is stale" in item
+            or item.startswith("Tide-source applicability")
+            or item.startswith("Travel estimate")
+            for item in missing_or_stale_information
+        )
     )
     if critical_information_missing:
         confidence = min(confidence, 54)
@@ -469,7 +567,19 @@ def _run_id(
     canonical_segments = tuple(sorted(segments, key=lambda item: item.segment_id))
     canonical_travel = tuple(sorted(travel_estimates, key=lambda item: item.segment_id))
     payload = repr(
-        (MODEL_VERSION, canonical_segments, condition, preferences, canonical_travel)
+        (
+            MODEL_VERSION,
+            canonical_segments,
+            (
+                condition,
+                condition.retrieved_at,
+                condition.scope_type,
+                condition.scope_id,
+                condition.tide_source_applicability,
+            ),
+            preferences,
+            tuple((item, item.retrieved_at) for item in canonical_travel),
+        )
     ).encode()
     return f"run-{hashlib.sha256(payload).hexdigest()[:16]}"
 
@@ -543,12 +653,19 @@ def rank_segments(
                 missing_or_stale_information=missing,
                 applicable_restrictions=applicable_restrictions,
                 health_advisory_evidence=segment.health_advisory_evidence,
+                legal_status_evidence=segment.legal_status_evidence,
+                activity_permission_evidence=segment.activity_permission_evidence,
+                restriction_review_evidence=segment.restriction_review_evidence,
                 verification_status=segment.verification_status,
                 source_refs=segment.source_refs,
                 data_last_updated=segment.last_updated,
                 travel_time_minutes=(travel_estimate.minutes if travel_estimate else None),
                 travel_origin=(travel_estimate.origin_label if travel_estimate else None),
                 model_version=MODEL_VERSION,
+                condition_snapshot_id=condition.snapshot_id,
+                travel_source_ref=(travel_estimate.source_ref if travel_estimate else None),
+                travel_retrieved_at=(travel_estimate.retrieved_at if travel_estimate else None),
+                travel_evidence_state=(travel_estimate.evidence_state if travel_estimate else None),
             )
         )
 
@@ -570,4 +687,5 @@ def rank_segments(
         travel_estimates=tuple(sorted(travel_estimates, key=lambda item: item.segment_id)),
         recommendations=ranked,
         demonstration_notice=DEMONSTRATION_NOTICE,
+        condition_snapshots=(condition,),
     )

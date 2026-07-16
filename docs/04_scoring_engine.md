@@ -37,6 +37,12 @@ are explicit rule constants and must be reviewed before any operational use. Con
 also declare the segment IDs to which their location-specific footing, tide, and daylight
 evidence applies.
 
+Stable legal-status, activity-permission, closure-review, health-advisory, and applicable
+restriction evidence must be verified, not future-dated, and no more than 180 days old. Manual
+travel evidence must include a retrieval timestamp no more than 30 days before the target.
+Tide evidence additionally requires a verified, linked, current manual source-to-scope
+applicability record. These thresholds are conservative v0.1 rules, not operational guarantees.
+
 A casting-space rating of 0/5 always fails the absolute casting-footprint gate. User preferences
 may require a higher rating but cannot reduce that safety minimum.
 

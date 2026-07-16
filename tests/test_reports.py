@@ -23,7 +23,7 @@ def test_json_report_structure(demo_segments: tuple[ShorelineSegment, ...]) -> N
     report = json.loads(render_json(run))
 
     assert report["schema_version"] == "geoweaver-report-v0.1"
-    assert report["condition_snapshot"]["inferred"] is True
+    assert report["condition_snapshot"]["inferred"] is False
     assert report["demonstration_notice"]
     assert len(report["recommendations"]) == len(demo_segments)
     first = report["recommendations"][0]
@@ -46,6 +46,11 @@ def test_json_report_structure(demo_segments: tuple[ShorelineSegment, ...]) -> N
         "model_version",
         "applicable_restrictions",
         "health_advisory_evidence",
+        "legal_status_evidence",
+        "activity_permission_evidence",
+        "restriction_review_evidence",
+        "condition_snapshot_id",
+        "travel_provenance",
     } <= first.keys()
     assert "data_quality" not in first["component_scores"]
     assert first["diagnostic_components"] == {
@@ -72,6 +77,7 @@ def test_json_report_exposes_restriction_provenance(
         "authority": "GeoWeaver synthetic fixture",
         "effective_from": "2026-01-01T00:00:00+00:00",
         "effective_to": "2026-12-31T23:59:59+00:00",
+        "evidence_state": "verified",
         "reason": "A fictional active closure exists to exercise the legal hard gate.",
         "restriction_id": "demo-closure-001",
         "restriction_type": "synthetic_closure",
@@ -81,11 +87,34 @@ def test_json_report_exposes_restriction_provenance(
     }
     health_evidence = closed["health_advisory_evidence"]
     assert health_evidence["authority"] == "GeoWeaver synthetic fixture"
+    assert health_evidence["evidence_state"] == "verified"
     assert health_evidence["source_ref"] == "demo://synthetic/health/closed-reach"
     assert health_evidence["status"] == "inactive"
     assert health_evidence["effective_from"] == "2026-01-01T00:00:00+00:00"
     assert health_evidence["effective_to"] == "2026-12-31T23:59:59+00:00"
     assert health_evidence["retrieved_at"] == "2026-01-15T00:00:00+00:00"
+    assert closed["legal_status_evidence"]["source_ref"]
+    assert closed["activity_permission_evidence"]["source_ref"]
+    assert closed["restriction_review_evidence"]["source_ref"]
+
+
+def test_rank_segments_populates_condition_and_travel_provenance(
+    demo_segments: tuple[ShorelineSegment, ...],
+) -> None:
+    run = rank_segments(
+        (demo_segments[0],),
+        demonstration_condition(),
+        demonstration_preferences(),
+        (demonstration_travel_estimates()[0],),
+    )
+    recommendation = json.loads(render_json(run))["recommendations"][0]
+
+    assert recommendation["condition_snapshot_id"] == "demo-conditions-v0.1"
+    assert recommendation["travel_provenance"] == {
+        "evidence_state": "inferred",
+        "retrieved_at": "2026-01-14T12:00:00+00:00",
+        "source_ref": "demo://synthetic/travel-times/v0.1",
+    }
 
 
 def test_markdown_report_explains_rankings(

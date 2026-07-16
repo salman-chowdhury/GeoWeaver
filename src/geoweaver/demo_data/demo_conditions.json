@@ -1,0 +1,46 @@
+{
+  "schema_version": "geoweaver-conditions-v0.1",
+  "data_classification": "synthetic_demo",
+  "conditions": [
+    {
+      "snapshot_id": "demo-conditions-v0.1",
+      "applicability": {
+        "scope_type": "explicit_segment_group",
+        "scope_id": "fictional-demo-catalogue",
+        "segment_ids": [
+          "demo-alpha-gutter",
+          "demo-beta-sandbar",
+          "demo-closed-reach",
+          "demo-unknown-access",
+          "demo-narrow-mud-edge"
+        ]
+      },
+      "observed_or_predicted_at": "2026-01-15T06:00:00+00:00",
+      "tide_stage": "rising",
+      "weather_warning_status": "clear",
+      "lightning_thunderstorm_status": "clear",
+      "sustained_wind_kph": 14.0,
+      "gust_speed_kph": 22.0,
+      "footing_status": "safe",
+      "usable_daylight_minutes": 120,
+      "source_refs": {
+        "weather": ["demo://synthetic/weather/v0.1"],
+        "footing": ["demo://synthetic/footing/v0.1"],
+        "tide": ["demo://synthetic/tide/v0.1"],
+        "daylight": ["demo://synthetic/daylight/v0.1"]
+      },
+      "tide_source": {
+        "source_location_id": "demo-tide-station-v0.1",
+        "source_location_label": "Fictional station for the synthetic catalogue",
+        "distance_to_scope_km": 0.0,
+        "assignment_method": "manually_reviewed",
+        "applicability_source_ref": "demo://synthetic/tide/v0.1",
+        "retrieved_at": "2026-01-15T05:00:00+00:00",
+        "evidence_state": "verified"
+      },
+      "retrieved_at": "2026-01-15T05:00:00+00:00",
+      "evidence_state": "verified"
+    }
+  ]
+}
+

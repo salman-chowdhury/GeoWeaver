@@ -120,3 +120,39 @@ class SkillLevel(StrEnum):
     NOVICE = "novice"
     INTERMEDIATE = "intermediate"
     EXPERIENCED = "experienced"
+
+
+class IntendedActivity(StrEnum):
+    """Activities supported by the current offline rule profile."""
+
+    CAST_NET_FISHING = "cast_net_fishing"
+
+
+class DataClassification(StrEnum):
+    """Declared origin class for version-controlled recommendation inputs."""
+
+    SYNTHETIC_DEMO = "synthetic_demo"
+    MANUAL_USER_SUPPLIED = "manual_user_supplied"
+
+
+class ConditionScopeType(StrEnum):
+    """Safe, explicit ways a condition snapshot can identify its applicability."""
+
+    SEGMENT = "segment"
+    WATERWAY = "waterway"
+    EXPLICIT_SEGMENT_GROUP = "explicit_segment_group"
+
+
+class EvidenceState(StrEnum):
+    """Whether a supplied value was directly verified or explicitly inferred."""
+
+    VERIFIED = "verified"
+    INFERRED = "inferred"
+
+
+class TideAssignmentMethod(StrEnum):
+    """How a tide source was judged applicable to a declared condition scope."""
+
+    CO_LOCATED = "co_located"
+    MANUALLY_REVIEWED = "manually_reviewed"
+    INFERRED = "inferred"

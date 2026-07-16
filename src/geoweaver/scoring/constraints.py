@@ -1,13 +1,15 @@
 """Fail-closed hard gates for the CastNetGPT v0.1 demonstration."""
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from geoweaver.domain.enums import (
     ActivityPermissionStatus,
     BankSlopeClass,
+    EvidenceState,
     PublicAccessState,
     RestrictionStatus,
     TidalStatus,
+    TideAssignmentMethod,
     TideStage,
     VerificationState,
 )
@@ -16,6 +18,7 @@ from geoweaver.domain.models import (
     ConstraintResult,
     GateCheck,
     ShorelineSegment,
+    SourceProvenance,
     TravelEstimate,
     UserPreferences,
 )
@@ -23,6 +26,8 @@ from geoweaver.domain.models import (
 MAX_CRITICAL_CONDITION_AGE_MINUTES = 120
 MAX_CRITICAL_SEGMENT_AGE_DAYS = 180
 MAX_CRITICAL_SEGMENT_AGE = timedelta(days=MAX_CRITICAL_SEGMENT_AGE_DAYS)
+MAX_TRAVEL_ESTIMATE_AGE_DAYS = 30
+MAX_TRAVEL_ESTIMATE_AGE = timedelta(days=MAX_TRAVEL_ESTIMATE_AGE_DAYS)
 MAX_SAFE_MUD_RISK = 3
 MAX_SAFE_SUSTAINED_WIND_KPH = 40.0
 MAX_SAFE_GUST_KPH = 60.0
@@ -42,9 +47,33 @@ def _access_check(segment: ShorelineSegment) -> GateCheck:
     return GateCheck("public_access", False, reason)
 
 
-def _legal_information_check(segment: ShorelineSegment) -> GateCheck:
+def _provenance_problem(
+    provenance: SourceProvenance,
+    valid_at: datetime,
+    evidence_name: str,
+) -> str | None:
+    if provenance.evidence_state is EvidenceState.INFERRED:
+        return f"{evidence_name} provenance is inferred; v0.1 fails closed."
+    age = valid_at - provenance.retrieved_at
+    if age.total_seconds() < 0:
+        return f"{evidence_name} provenance was retrieved after the recommendation time."
+    if age > MAX_CRITICAL_SEGMENT_AGE:
+        return f"{evidence_name} provenance is stale ({age.days} days old); v0.1 fails closed."
+    return None
+
+
+def _legal_information_check(segment: ShorelineSegment, condition: ConditionSnapshot) -> GateCheck:
+    evidence_problem = _provenance_problem(
+        segment.legal_status_evidence,
+        condition.valid_at,
+        "Legal-status",
+    )
+    if evidence_problem is not None:
+        return GateCheck("legal_information", False, evidence_problem)
     if segment.legal_status_known:
-        return GateCheck("legal_information", True, "Legal status is explicitly recorded.")
+        return GateCheck(
+            "legal_information", True, "Legal status is explicitly recorded with current evidence."
+        )
     return GateCheck(
         "legal_information",
         False,
@@ -52,7 +81,16 @@ def _legal_information_check(segment: ShorelineSegment) -> GateCheck:
     )
 
 
-def _activity_permission_check(segment: ShorelineSegment) -> GateCheck:
+def _activity_permission_check(
+    segment: ShorelineSegment, condition: ConditionSnapshot
+) -> GateCheck:
+    evidence_problem = _provenance_problem(
+        segment.activity_permission_evidence,
+        condition.valid_at,
+        "Activity-permission",
+    )
+    if evidence_problem is not None:
+        return GateCheck("activity_permission", False, evidence_problem)
     status = segment.activity_permission_status
     if status is ActivityPermissionStatus.PERMITTED:
         return GateCheck(
@@ -77,6 +115,12 @@ def _tidal_eligibility_check(segment: ShorelineSegment) -> GateCheck:
 
 def _health_advisory_check(segment: ShorelineSegment, condition: ConditionSnapshot) -> GateCheck:
     evidence = segment.health_advisory_evidence
+    if evidence.evidence_state is EvidenceState.INFERRED:
+        return GateCheck(
+            "health_advisory",
+            False,
+            "Health-advisory evidence is inferred; v0.1 fails closed.",
+        )
     if evidence.retrieved_at > condition.valid_at:
         return GateCheck(
             "health_advisory",
@@ -89,6 +133,13 @@ def _health_advisory_check(segment: ShorelineSegment, condition: ConditionSnapsh
             False,
             "Health-advisory evidence does not apply at the recommendation time.",
         )
+    age = condition.valid_at - evidence.retrieved_at
+    if age > MAX_CRITICAL_SEGMENT_AGE:
+        return GateCheck(
+            "health_advisory",
+            False,
+            f"Health-advisory evidence is stale ({age.days} days old); v0.1 fails closed.",
+        )
     if segment.health_advisory_status is RestrictionStatus.INACTIVE:
         return GateCheck("health_advisory", True, "No active health advisory is recorded.")
     if segment.health_advisory_status is RestrictionStatus.ACTIVE:
@@ -99,12 +150,36 @@ def _health_advisory_check(segment: ShorelineSegment, condition: ConditionSnapsh
 
 
 def _closure_check(segment: ShorelineSegment, condition: ConditionSnapshot) -> GateCheck:
+    evidence_problem = _provenance_problem(
+        segment.restriction_review_evidence,
+        condition.valid_at,
+        "Closure-review",
+    )
+    if evidence_problem is not None:
+        return GateCheck("active_legal_closure", False, evidence_problem)
     applicable = [item for item in segment.restrictions if item.is_effective_at(condition.valid_at)]
     if any(item.retrieved_at > condition.valid_at for item in applicable):
         return GateCheck(
             "active_legal_closure",
             False,
             "Applicable restriction evidence was retrieved after the recommendation time.",
+        )
+    stale = [
+        item
+        for item in applicable
+        if condition.valid_at - item.retrieved_at > MAX_CRITICAL_SEGMENT_AGE
+    ]
+    if stale:
+        return GateCheck(
+            "active_legal_closure",
+            False,
+            "Applicable restriction evidence is stale; v0.1 fails closed.",
+        )
+    if any(item.evidence_state is EvidenceState.INFERRED for item in applicable):
+        return GateCheck(
+            "active_legal_closure",
+            False,
+            "Applicable restriction evidence is inferred; v0.1 fails closed.",
         )
     active = [item for item in applicable if item.status is RestrictionStatus.ACTIVE]
     unknown = [item for item in applicable if item.status is RestrictionStatus.UNKNOWN]
@@ -131,6 +206,11 @@ def _critical_condition_evidence_reason(
     source_refs: tuple[str, ...],
     evidence_name: str,
 ) -> str | None:
+    if condition.retrieved_at is None:
+        return f"{evidence_name} retrieval provenance is missing; v0.1 fails closed."
+    actual_age = condition.valid_at - condition.retrieved_at
+    if actual_age.total_seconds() < 0:
+        return f"{evidence_name} evidence was retrieved after the recommendation time."
     if not status_verified:
         return f"{evidence_name} status is not verified; v0.1 fails closed."
     if not source_refs:
@@ -142,6 +222,9 @@ def _critical_condition_evidence_reason(
             f"{evidence_name} status is stale ({condition.data_freshness_minutes} minutes old); "
             "v0.1 fails closed."
         )
+    actual_age_minutes = int(actual_age.total_seconds() // 60)
+    if actual_age_minutes != condition.data_freshness_minutes:
+        return f"{evidence_name} freshness conflicts with its retrieval timestamp."
     return None
 
 
@@ -210,6 +293,41 @@ def _tide_condition_check(condition: ConditionSnapshot) -> GateCheck:
     )
     if evidence_problem is not None:
         return GateCheck("tide_condition", False, evidence_problem)
+    applicability = condition.tide_source_applicability
+    if applicability is None:
+        return GateCheck(
+            "tide_condition",
+            False,
+            "Tide-source applicability provenance is missing; v0.1 fails closed.",
+        )
+    if applicability.applicability_source_ref not in condition.tide_source_refs:
+        return GateCheck(
+            "tide_condition",
+            False,
+            "Tide-source applicability is not linked to the supplied tide evidence.",
+        )
+    if (
+        applicability.evidence_state is EvidenceState.INFERRED
+        or applicability.assignment_method is TideAssignmentMethod.INFERRED
+    ):
+        return GateCheck(
+            "tide_condition",
+            False,
+            "Tide-source applicability is inferred; v0.1 fails closed.",
+        )
+    applicability_age = condition.valid_at - applicability.retrieved_at
+    if applicability_age.total_seconds() < 0:
+        return GateCheck(
+            "tide_condition",
+            False,
+            "Tide-source applicability was retrieved after the recommendation time.",
+        )
+    if applicability_age.total_seconds() / 60 > MAX_CRITICAL_CONDITION_AGE_MINUTES:
+        return GateCheck(
+            "tide_condition",
+            False,
+            "Tide-source applicability is stale; v0.1 fails closed.",
+        )
     if condition.tide_stage is TideStage.UNKNOWN:
         return GateCheck("tide_condition", False, "Tide stage is missing; v0.1 fails closed.")
     return GateCheck("tide_condition", True, "Tide stage is verified and sourced.")
@@ -369,6 +487,7 @@ def _critical_record_freshness_check(
 
 def _travel_time_check(
     segment: ShorelineSegment,
+    condition: ConditionSnapshot,
     preferences: UserPreferences,
     travel_estimate: TravelEstimate | None,
 ) -> GateCheck:
@@ -383,6 +502,25 @@ def _travel_time_check(
             "travel_time",
             False,
             "Travel estimate does not refer to this segment; v0.1 fails closed.",
+        )
+    if travel_estimate.retrieved_at is None:
+        return GateCheck(
+            "travel_time",
+            False,
+            "Travel estimate retrieval time is missing; v0.1 fails closed.",
+        )
+    travel_age = condition.valid_at - travel_estimate.retrieved_at
+    if travel_age.total_seconds() < 0:
+        return GateCheck(
+            "travel_time",
+            False,
+            "Travel estimate was retrieved after the recommendation time.",
+        )
+    if travel_age > MAX_TRAVEL_ESTIMATE_AGE:
+        return GateCheck(
+            "travel_time",
+            False,
+            f"Travel estimate is stale ({travel_age.days} days old); v0.1 fails closed.",
         )
     if travel_estimate.minutes > preferences.maximum_travel_minutes:
         return GateCheck(
@@ -409,8 +547,8 @@ def evaluate_constraints(
     return ConstraintResult(
         checks=(
             _access_check(segment),
-            _legal_information_check(segment),
-            _activity_permission_check(segment),
+            _legal_information_check(segment, condition),
+            _activity_permission_check(segment, condition),
             _tidal_eligibility_check(segment),
             _health_advisory_check(segment, condition),
             _closure_check(segment, condition),
@@ -420,7 +558,7 @@ def evaluate_constraints(
             _casting_space_check(segment, preferences),
             _daylight_check(condition, preferences),
             _family_check(segment, preferences),
-            _travel_time_check(segment, preferences, travel_estimate),
+            _travel_time_check(segment, condition, preferences, travel_estimate),
             _safety_information_check(segment),
             _availability_check(segment),
             _critical_record_freshness_check(segment, condition),
