@@ -10,9 +10,9 @@ Last reconciled: **2026-09-07**
 
 **M1 — Real-trip CastNetGPT v0.1 vertical slice**
 
-Milestone 0, the offline deterministic scoring foundation, is substantially implemented. The
-next goal is to replace demonstration-only inputs with reproducible user-supplied inputs and then
-build the evidence and curation workflow required for one real field trip.
+Milestone 0, the offline deterministic scoring foundation, is substantially implemented. Task M1.1
+added a validated user-supplied run input document format, and the next goal is to wire those explicit
+inputs into the CLI ranking workflow.
 
 ## What GeoWeaver is
 
@@ -33,6 +33,8 @@ The repository currently contains the following working implementation surfaces:
 - typed domain models and controlled enums under `src/geoweaver/domain/`;
 - a documented and validated v0.1 shoreline GeoJSON contract;
 - catalogue loading and validation under `src/geoweaver/data/`;
+- run input JSON loading and validation under `src/geoweaver/data/run_input.py` and
+  `data/templates/run_input.template.json`;
 - deterministic hard constraints under `src/geoweaver/scoring/constraints.py`;
 - deterministic scoring, confidence calculation, and ranking under
   `src/geoweaver/scoring/scorer.py`;
@@ -41,13 +43,12 @@ The repository currently contains the following working implementation surfaces:
 - a console entry point in `src/geoweaver/cli.py`;
 - fictional demonstration inputs in `src/geoweaver/demo.py` and
   `data/catalogue/demo_segments.geojson`;
-- automated tests covering catalogue validation, loading, constraints, scoring, reports, and CLI
-  behaviour under `tests/`;
+- automated tests covering catalogue validation, run-input validation, loading, constraints,
+  scoring, reports, and CLI behaviour under `tests/`;
 - pytest and Ruff development configuration.
 
 The typed run-time concepts already include `ConditionSnapshot`, `UserPreferences`,
-`TravelEstimate`, `RankedRecommendation`, and `RecommendationRun`. Agents must inspect these
-existing models before proposing duplicate request/result models.
+`TravelEstimate`, `RankedRecommendation`, and `RecommendationRun`.
 
 ## Demonstration workflow that exists today
 
@@ -61,15 +62,15 @@ uv run geoweaver rank --catalogue data/catalogue/demo_segments.geojson --format 
 
 The `rank` command currently takes a catalogue and output format, but it obtains conditions,
 preferences, origin/travel estimates, and related run inputs from fixed synthetic demonstration
-helpers. This is intentional for reproducibility, but it is the main boundary between M0 and M1.
+helpers. Task M1.1 introduced `load_run_input` for loading user-supplied input files, and M1.2 will
+wire this into `geoweaver rank`.
 
 ## Implemented but not yet complete for a real trip
 
-### Typed recommendation inputs
+### CLI integration of explicit run inputs
 
-The domain layer already represents preferences, conditions, and travel estimates, but the CLI
-does not yet accept a complete user-supplied recommendation-run input document. The next coding
-work must reuse the existing models rather than create a parallel domain model.
+The loader for run input documents (`src/geoweaver/data/run_input.py`) exists and is tested, but
+the CLI `rank` command needs to be updated in M1.2 to accept `--inputs <path>`.
 
 ### Shoreline catalogue contract
 
@@ -92,7 +93,7 @@ must remain the baseline when later live adapters and ML experiments are added.
 
 The following capabilities must not be assumed to exist:
 
-- user-supplied end-to-end run input via CLI or file;
+- user-supplied end-to-end run input via CLI;
 - reviewed real shoreline catalogue;
 - selected repository code licence and explicit data-licensing strategy;
 - authoritative real-trip legal/closure/advisory evidence workflow;
@@ -156,7 +157,7 @@ These blockers do **not** prevent implementation of the next ready coding task.
 
 The single next implementation task is:
 
-**M1.1 — Add a validated user-supplied recommendation-run input document.**
+**M1.2 — Wire explicit run inputs into `geoweaver rank`.**
 
 See `docs/10_implementation_plan.md` for the complete task contract and
 `docs/11_progress.md` for the authoritative task state.

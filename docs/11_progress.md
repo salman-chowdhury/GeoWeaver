@@ -49,9 +49,8 @@ baseline checks before editing code; this file is not a substitute for test exec
   - Owner decision required for final selection.
   - Does not block M1.1/M1.2 because they can use synthetic/manual private inputs.
   - Blocks publication of a real curated catalogue.
-- [ ] **NEXT — M1.1 Add a validated user-supplied recommendation-run input document**
-- [ ] **BLOCKED — M1.2 Wire explicit run inputs into `geoweaver rank`**
-  - Blocked by M1.1.
+- [x] **DONE — M1.1 Add a validated user-supplied recommendation-run input document**
+- [ ] **NEXT — M1.2 Wire explicit run inputs into `geoweaver rank`**
 - [ ] **BLOCKED — M1.3 Implement a provenance/source registry contract**
   - Blocked by M1.2.
 - [ ] **BLOCKED — M1.4 Define and test the real-candidate curation workflow**
@@ -136,6 +135,7 @@ Keep this deliberately short. Git history and PRs/issues are the detailed histor
 | Date | Task | Evidence |
 |---|---|---|
 | 2026-09-07 | M0 foundation reconciled as implemented | Existing package, tests, CLI, scoring and docs reviewed during documentation reconciliation |
+| 2026-09-07 | M1.1 Add a validated user-supplied recommendation-run input document | Implemented run_input loader/validator and tests in src/geoweaver/data/run_input.py |
 
 ## When a task is completed
 
