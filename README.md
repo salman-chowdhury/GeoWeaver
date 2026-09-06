@@ -4,7 +4,7 @@
 environmental, temporal, and observational data to reason about real-world locations.**
 
 Its first application is **CastNetGPT**: an explainable decision-support experiment for
-ranking shoreline candidates. The current v0.1 slice is completely offline.
+ranking shoreline candidates. The current implementation remains offline and demonstration-first.
 
 > **Demo warning:** `data/catalogue/demo_segments.geojson` contains fictional synthetic
 > records and coordinates only. Its output is not a real fishing recommendation and does not
@@ -14,7 +14,9 @@ ranking shoreline candidates. The current v0.1 slice is completely offline.
 
 > Understand the world, not just map it.
 
-GeoWeaver is designed as a reusable core rather than a fishing-specific application. The same spatial reasoning pipeline may later support flood analysis, property intelligence, kayaking, wildlife observation, environmental monitoring, and planetary or celestial mapping.
+GeoWeaver is designed as a reusable core rather than a fishing-specific application. The same
+spatial reasoning pipeline may later support flood analysis, property intelligence, kayaking,
+wildlife observation, environmental monitoring, and planetary or celestial mapping.
 
 ## Initial scope
 
@@ -24,11 +26,13 @@ The first study area covers:
 - Brisbane
 - Logan
 
-The first practical milestone is a usable weekend prototype that can rank a curated set of shoreline candidates for cast-net fishing.
+The first practical vertical slice is a reproducible workflow that can rank a curated set of
+shoreline candidates for one real cast-net field trip while making legality, safety, evidence
+quality, provenance, confidence, and limitations explicit.
 
 ## Working offline scoring foundation
 
-The repository now provides a Python 3.12+ package that:
+The repository provides a Python 3.12+ package that:
 
 - validates the documented v0.1 GeoJSON contract;
 - applies fail-closed activity, tidal, legal/advisory, access, weather, terrain/footing,
@@ -39,8 +43,8 @@ The repository now provides a Python 3.12+ package that:
 
 This foundation does **not** complete Issue #1 or the real-trip v0.1 vertical slice. It exercises
 the contracts and deterministic rules with synthetic fixtures. The real-trip work still requires
-reviewed shoreline candidates, user-supplied trip inputs, authoritative legal and condition
-evidence, selected code/data licences, and a recorded field test.
+explicit user-supplied run inputs, reviewed shoreline candidates, authoritative legal and
+condition evidence, selected code/data licensing strategy, and a recorded field test.
 
 ## Installation
 
@@ -78,49 +82,72 @@ geoweaver rank --catalogue data/catalogue/demo_segments.geojson --format json
 geoweaver rank --catalogue data/catalogue/demo_segments.geojson --format markdown
 ```
 
-The rank command deliberately uses a fixed, printed synthetic condition snapshot, fixed demo
-preferences, and sourced manual travel estimates from a fictional origin. This keeps results
-reproducible while live data and user-input workflows remain out of scope.
+The rank command currently uses a fixed, printed synthetic condition snapshot, fixed demo
+preferences, and sourced manual travel estimates from a fictional origin. This keeps M0 results
+reproducible while explicit user-supplied run inputs are implemented in M1.
+
+## Continuing development
+
+A contributor or AI agent starting with no prior context should **not** guess the next task from
+this README, the roadmap, or an old issue checklist.
+
+Read in this order:
+
+1. `AGENTS.md` — mandatory repository workflow and safety/engineering rules;
+2. `docs/09_status.md` — authoritative snapshot of what exists now;
+3. `docs/11_progress.md` — authoritative task state and the single task marked **NEXT**;
+4. `docs/10_implementation_plan.md` — detailed task prerequisites, scope, tests, acceptance
+   criteria, and the staged path through later milestones;
+5. `docs/01_architecture.md` and the task-specific domain documents/ADRs.
+
+The implementation workflow is deliberately incremental: inspect existing code and tests, complete
+one NEXT task, run the complete checks, update progress/status, and only then advance.
 
 ## Planned capabilities
 
-- Shoreline segmentation and public-access modelling
-- Weather, wind, rainfall, tide, and daylight integration
+- User-supplied reproducible recommendation runs
+- Reviewed shoreline segmentation and public-access modelling
+- Weather, wind, rainfall, tide, warning, and daylight integration
 - Terrain and bank-slope analysis from DEM and LiDAR
-- Aerial and satellite feature extraction
-- Rule-based environmental scoring
+- Aerial and satellite feature extraction with human review
+- Rule-based environmental scoring as a transparent baseline
 - Field-observation logging and calibration
 - Machine-learning ranking once sufficient outcome data exists
+- A reusable application/plugin platform after the first vertical slice is proven
 
 ## Repository structure
 
 ```text
-src/geoweaver/  Offline domain, validation, scoring, reports, and CLI package
-docs/           Project vision, architecture, data, scoring, research notes, and ADRs
-backend/        Reserved for later service-oriented boundaries
-frontend/       Reserved for later application interfaces
-data/           Schemas, small curated datasets, and data documentation
-models/         Rule and learned-model documentation as the project evolves
-scripts/        Data acquisition, transformation, and maintenance utilities
-notebooks/      Exploration and geospatial research
-tests/          Automated unit and CLI tests
+src/geoweaver/  Implemented domain, data validation, scoring, reports, demo inputs, and CLI
+docs/           Status, implementation plan, architecture, data/scoring research, roadmap, ADRs
+backend/        Reserved for later service-oriented evolution; not the current Python core
+frontend/       Reserved for the interactive-interface milestone
+data/           Small redistributable schemas, templates, and curated/demo datasets
+models/         Rule/learned-model documentation or artefacts as later milestones require
+scripts/        Reproducible data acquisition, transformation, and maintenance utilities
+notebooks/      Exploration and geospatial research; not production logic
+tests/          Automated unit, regression, report, validation, scoring, and CLI tests
 ```
 
 ## Current milestone
 
-**Milestone 0 — Offline scoring foundation**
+**M1 — Real-trip CastNetGPT v0.1 vertical slice**
 
-This foundation exercises the planned vertical-slice architecture against synthetic data; it is
-not the real-trip vertical slice itself. The next milestone is authoritative source research and
-deliberate curation. No demo record should be promoted into a real recommendation without legal,
-safety, licence, provenance, and field review.
+The M0 offline scoring foundation exists and is exercised against synthetic data. M1 turns those
+contracts into a reproducible real-trip workflow, beginning with validated user-supplied run inputs
+and then adding provenance, curation, authoritative evidence, and field validation.
+
+See `docs/09_status.md` for the current capability snapshot and `docs/11_progress.md` for the
+single next task.
 
 ## Current limitations
 
-- Demo conditions, preferences, origin, and travel estimates are fixed and synthetic.
+- Demo conditions, preferences, origin, and travel estimates are still fixed and synthetic in the
+  current CLI workflow.
 - There are no live weather, tide, routing, closure, or advisory adapters.
-- There is no frontend, API, authentication, database, scraping, terrain/imagery processing,
-  machine learning, or production deployment.
+- There is no reviewed real shoreline catalogue ready for operational recommendations.
+- There is no frontend, API, authentication, production database, scraping, terrain/imagery
+  processing, machine learning, or production deployment.
 - Scores express a transparent relative ranking, not catch probability or expected catch.
-- Source licensing and the real catalogue governance process still require decisions.
-- Interfaces and schemas may change before the first tagged release.
+- Code licence and real-data licensing/governance decisions remain open.
+- Interfaces and schemas may change before the first tagged production-oriented release.
