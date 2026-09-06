@@ -1,0 +1,84 @@
+{
+  "condition": {
+    "snapshot_id": "template-conditions-v0.1",
+    "applicable_segment_ids": [
+      "demo-alpha-gutter",
+      "demo-beta-sandbar",
+      "demo-closed-reach",
+      "demo-unknown-access",
+      "demo-narrow-mud-edge"
+    ],
+    "valid_at": "2026-01-15T06:00:00Z",
+    "tide_stage": "rising",
+    "severe_weather_warning": false,
+    "lightning_or_severe_thunderstorm_risk": false,
+    "footing_safe": true,
+    "usable_daylight_minutes": 120,
+    "wind_speed_kph": 14.0,
+    "gust_speed_kph": 22.0,
+    "data_freshness_minutes": 60,
+    "inferred": true,
+    "weather_status_verified": true,
+    "footing_status_verified": true,
+    "tide_status_verified": true,
+    "daylight_status_verified": true,
+    "weather_source_refs": [
+      "demo://synthetic/weather/v0.1"
+    ],
+    "footing_source_refs": [
+      "demo://synthetic/footing/v0.1"
+    ],
+    "tide_source_refs": [
+      "demo://synthetic/tide/v0.1"
+    ],
+    "daylight_source_refs": [
+      "demo://synthetic/daylight/v0.1"
+    ]
+  },
+  "preferences": {
+    "skill_level": "novice",
+    "require_family_suitable": true,
+    "minimum_family_suitability": 3,
+    "minimum_casting_space_rating": 3,
+    "minimum_usable_daylight_minutes": 60,
+    "desired_privacy_rating": 3,
+    "maximum_travel_minutes": 45
+  },
+  "travel_estimates": [
+    {
+      "segment_id": "demo-alpha-gutter",
+      "origin_label": "Fictional Demo Origin",
+      "minutes": 20,
+      "source_ref": "demo://synthetic/travel-times/v0.1",
+      "inferred": true
+    },
+    {
+      "segment_id": "demo-beta-sandbar",
+      "origin_label": "Fictional Demo Origin",
+      "minutes": 35,
+      "source_ref": "demo://synthetic/travel-times/v0.1",
+      "inferred": true
+    },
+    {
+      "segment_id": "demo-closed-reach",
+      "origin_label": "Fictional Demo Origin",
+      "minutes": 15,
+      "source_ref": "demo://synthetic/travel-times/v0.1",
+      "inferred": true
+    },
+    {
+      "segment_id": "demo-unknown-access",
+      "origin_label": "Fictional Demo Origin",
+      "minutes": 25,
+      "source_ref": "demo://synthetic/travel-times/v0.1",
+      "inferred": true
+    },
+    {
+      "segment_id": "demo-narrow-mud-edge",
+      "origin_label": "Fictional Demo Origin",
+      "minutes": 50,
+      "source_ref": "demo://synthetic/travel-times/v0.1",
+      "inferred": true
+    }
+  ]
+}
