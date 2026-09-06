@@ -1,33 +1,30 @@
-# Initial backlog
+# Backlog status
 
-## Ready
+> **Deprecated as an active task list.**
+>
+> This file is retained so historical links do not break. It must not be used to decide what to
+> implement next.
 
-- [ ] Confirm the v0.1 architecture and package layout.
-- [ ] Select code and data licences.
-- [ ] Define the shoreline GeoJSON schema.
-- [ ] Curate the first 20 candidate segments.
-- [ ] Verify cast-net legal constraints and source provenance.
-- [ ] Implement the deterministic scorer.
-- [ ] Add a CLI that emits JSON and Markdown.
-- [ ] Complete the first field observation.
+The original backlog was created before the offline Python foundation was implemented. Several of
+its unchecked items now exist in code, including the package layout, GeoJSON validation contract,
+deterministic scorer, hard constraints, reports, CLI, and automated tests. Keeping that historical
+checklist active would cause contributors or AI agents to duplicate completed work.
 
-## Later
+Use these files instead:
 
-- [ ] Automate weather and warnings.
-- [ ] Implement tide-station assignment.
-- [ ] Add route-time estimation.
-- [ ] Evaluate LiDAR and DEM coverage.
-- [ ] Design imagery annotation classes.
-- [ ] Build the interactive map.
-- [ ] Add additional objective profiles.
+1. `docs/09_status.md` — what is implemented now and what is still missing;
+2. `docs/11_progress.md` — authoritative task state and the single task marked **NEXT**;
+3. `docs/10_implementation_plan.md` — detailed prerequisites, scope, tests, and acceptance criteria
+   for every planned task;
+4. `docs/05_roadmap.md` — broad product/version direction only.
 
-## Definition of done for v0.1
+## Historical v0.1 intent
 
-A user can provide a time window and practical constraints, receive a reproducible ranked shortlist with explanations, visit a recommended site, and record the outcome in the repository's observation format.
+The original v0.1 definition of done remains useful as a product-level outcome:
 
-## Current implementation status
+> A user can provide a time window and practical constraints, receive a reproducible ranked
+> shortlist with explanations, visit a recommended site, and record the outcome in the
+> repository's observation format.
 
-The repository currently contains an offline scoring foundation using fictional synthetic
-fixtures. It does not yet satisfy the definition of done above or complete Issue #1. Real-trip
-inputs, 20 reviewed candidates, authoritative provenance, licence decisions, and a documented
-field observation remain open work.
+The current M1 tasks in `docs/10_implementation_plan.md` are the authoritative decomposition of
+that outcome.
