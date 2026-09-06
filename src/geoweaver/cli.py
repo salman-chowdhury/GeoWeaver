@@ -95,15 +95,18 @@ def _rank(catalogue: Path, report_format: str, inputs: Path | None = None) -> in
     segments = load_catalogue(catalogue)
     if inputs is not None:
         condition, preferences, travel_estimates = load_run_input(inputs)
+        demonstration_notice = ""
     else:
         condition, travel_estimates = _demonstration_inputs_for_catalogue(segments)
         preferences = demonstration_preferences()
+        demonstration_notice = DEMONSTRATION_NOTICE
 
     run = rank_segments(
         segments,
         condition,
         preferences,
         travel_estimates,
+        demonstration_notice=demonstration_notice,
     )
     report = render_json(run) if report_format == "json" else render_markdown(run)
     sys.stdout.write(report)

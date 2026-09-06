@@ -117,6 +117,28 @@ def test_markdown_report_explains_rankings(
     assert "catch probability" not in report.lower()
 
 
+def test_reports_non_demo_mode(demo_segments: tuple[ShorelineSegment, ...]) -> None:
+    run = rank_segments(
+        demo_segments,
+        demonstration_condition(),
+        demonstration_preferences(),
+        demonstration_travel_estimates(),
+        demonstration_notice="",
+    )
+    json_rep = json.loads(render_json(run))
+    assert json_rep["demonstration_notice"] == ""
+
+    markdown_rep = render_markdown(run)
+    assert "# CastNetGPT v0.1 Recommendation Ranking" in markdown_rep
+    assert "# CastNetGPT v0.1 Demonstration Ranking" not in markdown_rep
+    assert "> **Warning:**" not in markdown_rep
+    assert "- **Condition time:**" in markdown_rep
+    assert "- **Synthetic condition time:**" not in markdown_rep
+    assert "## User preferences" in markdown_rep
+    assert "## Demonstration preferences" not in markdown_rep
+    assert "None in the supplied run inputs." in markdown_rep
+
+
 def test_json_render_is_deterministic(demo_segments: tuple[ShorelineSegment, ...]) -> None:
     first_run = rank_segments(
         demo_segments,

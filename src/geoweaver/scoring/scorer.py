@@ -479,6 +479,8 @@ def rank_segments(
     condition: ConditionSnapshot,
     preferences: UserPreferences,
     travel_estimates: tuple[TravelEstimate, ...],
+    *,
+    demonstration_notice: str = DEMONSTRATION_NOTICE,
 ) -> RecommendationRun:
     """Rank all segments deterministically, always placing eligible records first."""
     segment_ids = [segment.segment_id for segment in segments]
@@ -569,5 +571,5 @@ def rank_segments(
         preferences=preferences,
         travel_estimates=tuple(sorted(travel_estimates, key=lambda item: item.segment_id)),
         recommendations=ranked,
-        demonstration_notice=DEMONSTRATION_NOTICE,
+        demonstration_notice=demonstration_notice,
     )

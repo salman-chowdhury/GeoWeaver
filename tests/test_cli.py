@@ -29,6 +29,7 @@ def test_rank_json_command(demo_catalogue_path: Path, capsys: pytest.CaptureFixt
     assert exit_code == 0
     assert report["application"] == "CastNetGPT v0.1"
     assert report["condition_snapshot"]["inferred"] is True
+    assert report["demonstration_notice"] != ""
 
 
 def test_rank_markdown_is_default(
@@ -39,6 +40,9 @@ def test_rank_markdown_is_default(
 
     assert exit_code == 0
     assert output.out.startswith("# CastNetGPT v0.1 Demonstration Ranking")
+    assert "> **Warning:**" in output.out
+    assert "- **Synthetic condition time:**" in output.out
+    assert "## Demonstration preferences" in output.out
 
 
 def test_invalid_catalogue_returns_nonzero(
@@ -152,6 +156,7 @@ def test_rank_with_valid_run_inputs_json(
 
     assert exit_code == 0
     assert report["condition_snapshot"]["snapshot_id"] == "template-conditions-v0.1"
+    assert report["demonstration_notice"] == ""
     assert len(report["recommendations"]) == 5
 
 
@@ -173,7 +178,12 @@ def test_rank_with_valid_run_inputs_markdown(
     output = capsys.readouterr()
 
     assert exit_code == 0
-    assert output.out.startswith("# CastNetGPT v0.1 Demonstration Ranking")
+    assert output.out.startswith("# CastNetGPT v0.1 Recommendation Ranking")
+    assert "> **Warning:**" not in output.out
+    assert "- **Condition time:**" in output.out
+    assert "- **Synthetic condition time:**" not in output.out
+    assert "## User preferences" in output.out
+    assert "## Demonstration preferences" not in output.out
 
 
 def test_rank_with_missing_inputs_file(
