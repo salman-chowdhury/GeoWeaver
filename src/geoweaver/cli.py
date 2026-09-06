@@ -68,7 +68,7 @@ def _parser() -> argparse.ArgumentParser:
     validate_parser.add_argument("--catalogue", required=True, type=Path)
 
     rank_parser = subparsers.add_parser(
-        "rank", help="Rank a catalogue with fixed synthetic conditions and preferences."
+        "rank", help="Rank a shoreline catalogue using explicit or synthetic run inputs."
     )
     rank_parser.add_argument("--catalogue", required=True, type=Path)
     rank_parser.add_argument(

@@ -200,3 +200,55 @@ def test_rank_with_invalid_inputs_file(
 
     assert exit_code == 3
     assert "Run input error" in output.err
+
+
+def test_rank_with_missing_inputs_file(
+    demo_catalogue_path: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    missing_inputs = tmp_path / "nonexistent_inputs.json"
+
+    exit_code = main(
+        [
+            "rank",
+            "--catalogue",
+            str(demo_catalogue_path),
+            "--inputs",
+            str(missing_inputs),
+        ]
+    )
+    output = capsys.readouterr()
+
+    assert exit_code == 3
+    assert "Run input error: could not read run input" in output.err
+
+
+def test_rank_with_supplied_evidence_triggering_fail_closed_gate(
+    demo_catalogue_path: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    template_path = Path("data/templates/run_input.template.json")
+    doc = json.loads(template_path.read_text(encoding="utf-8"))
+    doc["condition"]["severe_weather_warning"] = True
+
+    inputs_path = tmp_path / "severe_weather_run_input.json"
+    inputs_path.write_text(json.dumps(doc), encoding="utf-8")
+
+    exit_code = main(
+        [
+            "rank",
+            "--catalogue",
+            str(demo_catalogue_path),
+            "--inputs",
+            str(inputs_path),
+            "--format",
+            "json",
+        ]
+    )
+    output = capsys.readouterr()
+    report = json.loads(output.out)
+
+    assert exit_code == 0
+    # Severe weather warning is active, so all segments should fail severe_weather gate
+    for rec in report["recommendations"]:
+        assert rec["eligible"] is False
+        gates = {failure["gate"] for failure in rec["hard_gate_failures"]}
+        assert "severe_weather" in gates
