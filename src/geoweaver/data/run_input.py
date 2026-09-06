@@ -312,6 +312,26 @@ def validate_run_input_document(
     preferences = _user_preferences(root["preferences"], "run_input.preferences")
     travel_estimates = _travel_estimates(root["travel_estimates"], "run_input.travel_estimates")
 
+    # Enforce cross-field consistency
+    origins = {estimate.origin_label for estimate in travel_estimates}
+    if len(origins) > 1:
+        raise RunInputValidationError(
+            "run_input.travel_estimates must all use the same origin_label"
+        )
+
+    applicable_ids = set(condition.applicable_segment_ids)
+    unknown_travel_ids = {
+        estimate.segment_id
+        for estimate in travel_estimates
+        if estimate.segment_id not in applicable_ids
+    }
+    if unknown_travel_ids:
+        unknown_str = ", ".join(sorted(unknown_travel_ids))
+        raise RunInputValidationError(
+            "run_input.travel_estimates reference segment IDs not in condition "
+            f"applicable_segment_ids: {unknown_str}"
+        )
+
     return condition, preferences, travel_estimates
 
 

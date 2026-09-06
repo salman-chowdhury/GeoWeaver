@@ -221,3 +221,48 @@ def test_invalid_type_field(valid_run_input_document: dict) -> None:
         match="run_input.preferences.require_family_suitable must be true or false",
     ):
         validate_run_input_document(valid_run_input_document)
+
+
+def test_inconsistent_origin_labels(valid_run_input_document: dict) -> None:
+    valid_run_input_document["travel_estimates"][1]["origin_label"] = "Different Origin"
+    with pytest.raises(
+        RunInputValidationError,
+        match="run_input.travel_estimates must all use the same origin_label",
+    ):
+        validate_run_input_document(valid_run_input_document)
+
+
+def test_travel_estimate_unknown_segment_id(valid_run_input_document: dict) -> None:
+    valid_run_input_document["travel_estimates"][0]["segment_id"] = "unknown-segment"
+    with pytest.raises(
+        RunInputValidationError,
+        match="reference segment IDs not in condition applicable_segment_ids: unknown-segment",
+    ):
+        validate_run_input_document(valid_run_input_document)
+
+
+def test_blank_source_reference_in_condition(valid_run_input_document: dict) -> None:
+    valid_run_input_document["condition"]["weather_source_refs"] = ["  "]
+    with pytest.raises(
+        RunInputValidationError,
+        match="run_input.condition.weather_source_refs\\[0\\] must be a non-empty string",
+    ):
+        validate_run_input_document(valid_run_input_document)
+
+
+def test_blank_source_reference_in_travel_estimate(valid_run_input_document: dict) -> None:
+    valid_run_input_document["travel_estimates"][0]["source_ref"] = ""
+    with pytest.raises(
+        RunInputValidationError,
+        match="run_input.travel_estimates\\[0\\].source_ref must be a non-empty string",
+    ):
+        validate_run_input_document(valid_run_input_document)
+
+
+def test_invalid_source_reference_type(valid_run_input_document: dict) -> None:
+    valid_run_input_document["condition"]["weather_source_refs"] = [123]
+    with pytest.raises(
+        RunInputValidationError,
+        match="run_input.condition.weather_source_refs\\[0\\] must be a non-empty string",
+    ):
+        validate_run_input_document(valid_run_input_document)
