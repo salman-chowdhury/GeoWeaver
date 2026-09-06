@@ -236,6 +236,8 @@ def _missing_or_stale_information(
     segment: ShorelineSegment,
     condition: ConditionSnapshot,
     travel_estimate: TravelEstimate | None,
+    *,
+    is_demo: bool = True,
 ) -> tuple[str, ...]:
     missing: list[str] = []
     if segment.verification_status is VerificationState.REMOTE_REVIEWED:
@@ -304,7 +306,12 @@ def _missing_or_stale_information(
             f"Condition snapshot is stale ({condition.data_freshness_minutes} minutes old)."
         )
     if condition.inferred:
-        missing.append("Condition snapshot is explicitly marked as inferred demonstration data.")
+        if is_demo:
+            missing.append(
+                "Condition snapshot is explicitly marked as inferred demonstration data."
+            )
+        else:
+            missing.append("Condition snapshot is explicitly marked as inferred.")
     if not condition.weather_status_verified:
         missing.append("Severe-weather status is not verified.")
     if not condition.footing_status_verified:
@@ -329,7 +336,10 @@ def _missing_or_stale_information(
     if travel_estimate is None:
         missing.append("Travel time is missing.")
     elif travel_estimate.inferred:
-        missing.append("Travel time is an inferred manual demonstration estimate.")
+        if is_demo:
+            missing.append("Travel time is an inferred manual demonstration estimate.")
+        else:
+            missing.append("Travel time is an inferred estimate.")
     return tuple(missing)
 
 
@@ -506,6 +516,7 @@ def rank_segments(
     if len(origins) > 1:
         raise ValueError("all travel estimates in a run must use the same origin")
 
+    is_demo = bool(demonstration_notice)
     assessments: list[RankedRecommendation] = []
     for segment in segments:
         travel_estimate = travel_by_segment.get(segment.segment_id)
@@ -517,7 +528,9 @@ def rank_segments(
             preferences,
             travel_estimate,
         )
-        missing = _missing_or_stale_information(segment, condition, travel_estimate)
+        missing = _missing_or_stale_information(
+            segment, condition, travel_estimate, is_demo=is_demo
+        )
         confidence_score, confidence_band = _confidence(
             segment, condition, missing, travel_estimate
         )

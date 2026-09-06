@@ -191,6 +191,29 @@ def test_inferred_conditions_cannot_receive_high_confidence(
     assert run.recommendations[0].confidence_band is not ConfidenceBand.HIGH
 
 
+def test_inferred_diagnostics_wording_respects_demo_mode(
+    demo_segments: tuple[ShorelineSegment, ...],
+) -> None:
+    segment = demo_segments[0]
+    condition = replace(demonstration_condition(), inferred=True)
+    travel = (replace(demonstration_travel_estimates()[0], inferred=True),)
+
+    demo_run = rank_segments(
+        (segment,), condition, demonstration_preferences(), travel, demonstration_notice="demo"
+    )
+    demo_missing = demo_run.recommendations[0].missing_or_stale_information
+    assert "Condition snapshot is explicitly marked as inferred demonstration data." in demo_missing
+    assert "Travel time is an inferred manual demonstration estimate." in demo_missing
+
+    user_run = rank_segments(
+        (segment,), condition, demonstration_preferences(), travel, demonstration_notice=""
+    )
+    user_missing = user_run.recommendations[0].missing_or_stale_information
+    assert "Condition snapshot is explicitly marked as inferred." in user_missing
+    assert "Travel time is an inferred estimate." in user_missing
+    assert not any("demonstration" in item for item in user_missing)
+
+
 def test_missing_morphology_and_environmental_evidence_reduce_confidence(
     demo_segments: tuple[ShorelineSegment, ...],
 ) -> None:
