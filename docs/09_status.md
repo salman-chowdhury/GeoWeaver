@@ -10,9 +10,9 @@ Last reconciled: **2026-09-07**
 
 **M1 — Real-trip CastNetGPT v0.1 vertical slice**
 
-Milestone 0, the offline deterministic scoring foundation, is substantially implemented. Task M1.1
-added a validated user-supplied run input document format, and the next goal is to wire those explicit
-inputs into the CLI ranking workflow.
+Milestone 0, the offline deterministic scoring foundation, is substantially implemented. Tasks M1.1
+and M1.2 added a validated user-supplied run input document format and wired `--inputs <path>` into
+`geoweaver rank`.
 
 ## What GeoWeaver is
 
@@ -21,7 +21,7 @@ application and is deliberately narrow: rank shoreline candidates for a specifie
 keeping legality, safety, evidence quality, provenance, uncertainty, and explanation visible.
 
 The current implementation is **not** a live recommendation system. It is an offline Python
-foundation exercised with fictional synthetic fixtures.
+foundation exercised with fictional synthetic fixtures or explicit user-supplied inputs.
 
 ## Implemented foundation
 
@@ -40,7 +40,8 @@ The repository currently contains the following working implementation surfaces:
   `src/geoweaver/scoring/scorer.py`;
 - explanation helpers under `src/geoweaver/scoring/explanations.py`;
 - JSON and Markdown report renderers under `src/geoweaver/reports/`;
-- a console entry point in `src/geoweaver/cli.py`;
+- a console entry point in `src/geoweaver/cli.py` with `validate-catalogue` and `rank`
+  (supporting `--inputs <path>`);
 - fictional demonstration inputs in `src/geoweaver/demo.py` and
   `data/catalogue/demo_segments.geojson`;
 - automated tests covering catalogue validation, run-input validation, loading, constraints,
@@ -50,27 +51,21 @@ The repository currently contains the following working implementation surfaces:
 The typed run-time concepts already include `ConditionSnapshot`, `UserPreferences`,
 `TravelEstimate`, `RankedRecommendation`, and `RecommendationRun`.
 
-## Demonstration workflow that exists today
+## Demonstration and user-input workflow that exists today
 
-A developer can install the package and run the synthetic offline workflow:
+A developer can install the package and run either the synthetic demo workflow or a user-input workflow:
 
 ```sh
 uv sync --extra dev
 uv run geoweaver validate-catalogue --catalogue data/catalogue/demo_segments.geojson
 uv run geoweaver rank --catalogue data/catalogue/demo_segments.geojson --format markdown
+uv run geoweaver rank --catalogue data/catalogue/demo_segments.geojson --inputs data/templates/run_input.template.json --format markdown
 ```
 
-The `rank` command currently takes a catalogue and output format, but it obtains conditions,
-preferences, origin/travel estimates, and related run inputs from fixed synthetic demonstration
-helpers. Task M1.1 introduced `load_run_input` for loading user-supplied input files, and M1.2 will
-wire this into `geoweaver rank`.
+The `rank` command accepts `--inputs <path>` to load user-supplied condition snapshots, preferences,
+and travel estimates. Omitting `--inputs` continues to use reproducible synthetic demonstration inputs.
 
 ## Implemented but not yet complete for a real trip
-
-### CLI integration of explicit run inputs
-
-The loader for run input documents (`src/geoweaver/data/run_input.py`) exists and is tested, but
-the CLI `rank` command needs to be updated in M1.2 to accept `--inputs <path>`.
 
 ### Shoreline catalogue contract
 
@@ -82,7 +77,7 @@ for operational use.
 
 The project documents provenance requirements and the current domain models retain source
 references, verification state, restrictions, condition source references, and timestamps.
-A complete real-data source registry/governance workflow has not yet been implemented.
+A complete real-data source registry/governance workflow has not yet been implemented (Task M1.3).
 
 ### Scoring and confidence
 
@@ -93,7 +88,7 @@ must remain the baseline when later live adapters and ML experiments are added.
 
 The following capabilities must not be assumed to exist:
 
-- user-supplied end-to-end run input via CLI;
+- provenance source registry contract;
 - reviewed real shoreline catalogue;
 - selected repository code licence and explicit data-licensing strategy;
 - authoritative real-trip legal/closure/advisory evidence workflow;
@@ -157,7 +152,7 @@ These blockers do **not** prevent implementation of the next ready coding task.
 
 The single next implementation task is:
 
-**M1.2 — Wire explicit run inputs into `geoweaver rank`.**
+**M1.3 — Implement a provenance/source registry contract.**
 
 See `docs/10_implementation_plan.md` for the complete task contract and
 `docs/11_progress.md` for the authoritative task state.

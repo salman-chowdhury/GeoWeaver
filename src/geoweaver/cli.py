@@ -6,7 +6,7 @@ from collections.abc import Sequence
 from dataclasses import replace
 from pathlib import Path
 
-from geoweaver.data.loader import load_catalogue
+from geoweaver.data import RunInputValidationError, load_catalogue, load_run_input
 from geoweaver.data.validation import CatalogueValidationError
 from geoweaver.demo import (
     demonstration_condition,
@@ -67,9 +67,14 @@ def _parser() -> argparse.ArgumentParser:
     validate_parser.add_argument("--catalogue", required=True, type=Path)
 
     rank_parser = subparsers.add_parser(
-        "rank", help="Rank a catalogue with fixed synthetic conditions and preferences."
+        "rank", help="Rank a catalogue with synthetic demonstration or user-supplied run inputs."
     )
     rank_parser.add_argument("--catalogue", required=True, type=Path)
+    rank_parser.add_argument(
+        "--inputs",
+        type=Path,
+        help="Path to user-supplied recommendation-run input JSON file.",
+    )
     rank_parser.add_argument(
         "--format",
         choices=("json", "markdown"),
@@ -86,13 +91,18 @@ def _validate(catalogue: Path) -> int:
     return 0
 
 
-def _rank(catalogue: Path, report_format: str) -> int:
+def _rank(catalogue: Path, report_format: str, inputs: Path | None = None) -> int:
     segments = load_catalogue(catalogue)
-    condition, travel_estimates = _demonstration_inputs_for_catalogue(segments)
+    if inputs is not None:
+        condition, preferences, travel_estimates = load_run_input(inputs)
+    else:
+        condition, travel_estimates = _demonstration_inputs_for_catalogue(segments)
+        preferences = demonstration_preferences()
+
     run = rank_segments(
         segments,
         condition,
-        demonstration_preferences(),
+        preferences,
         travel_estimates,
     )
     report = render_json(run) if report_format == "json" else render_markdown(run)
@@ -106,9 +116,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         if arguments.command == "validate-catalogue":
             return _validate(arguments.catalogue)
-        return _rank(arguments.catalogue, arguments.format)
+        return _rank(arguments.catalogue, arguments.format, arguments.inputs)
     except CatalogueValidationError as error:
         print(f"Catalogue error: {error}", file=sys.stderr)
+        return 2
+    except RunInputValidationError as error:
+        print(f"Run input error: {error}", file=sys.stderr)
         return 2
     except ValueError as error:
         print(f"Ranking error: {error}", file=sys.stderr)

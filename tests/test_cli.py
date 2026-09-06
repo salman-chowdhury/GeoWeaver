@@ -130,3 +130,113 @@ def test_cli_converts_ranking_errors_to_controlled_exit(
     assert exit_code == 3
     assert output.out == ""
     assert "Ranking error: synthetic ranking failure" in output.err
+
+
+def test_rank_with_valid_run_inputs_json(
+    demo_catalogue_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    template_path = Path("data/templates/run_input.template.json")
+    exit_code = main(
+        [
+            "rank",
+            "--catalogue",
+            str(demo_catalogue_path),
+            "--inputs",
+            str(template_path),
+            "--format",
+            "json",
+        ]
+    )
+    output = capsys.readouterr()
+    report = json.loads(output.out)
+
+    assert exit_code == 0
+    assert report["condition_snapshot"]["snapshot_id"] == "template-conditions-v0.1"
+    assert len(report["recommendations"]) == 5
+
+
+def test_rank_with_valid_run_inputs_markdown(
+    demo_catalogue_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    template_path = Path("data/templates/run_input.template.json")
+    exit_code = main(
+        [
+            "rank",
+            "--catalogue",
+            str(demo_catalogue_path),
+            "--inputs",
+            str(template_path),
+            "--format",
+            "markdown",
+        ]
+    )
+    output = capsys.readouterr()
+
+    assert exit_code == 0
+    assert output.out.startswith("# CastNetGPT v0.1 Demonstration Ranking")
+
+
+def test_rank_with_missing_inputs_file(
+    demo_catalogue_path: Path,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    missing_inputs = tmp_path / "nonexistent-inputs.json"
+    exit_code = main(
+        ["rank", "--catalogue", str(demo_catalogue_path), "--inputs", str(missing_inputs)]
+    )
+    output = capsys.readouterr()
+
+    assert exit_code == 2
+    assert "Run input error: could not read run input" in output.err
+
+
+def test_rank_with_invalid_inputs_file(
+    demo_catalogue_path: Path,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    invalid_inputs = tmp_path / "invalid-inputs.json"
+    invalid_inputs.write_text("{}", encoding="utf-8")
+    exit_code = main(
+        ["rank", "--catalogue", str(demo_catalogue_path), "--inputs", str(invalid_inputs)]
+    )
+    output = capsys.readouterr()
+
+    assert exit_code == 2
+    assert "Run input error:" in output.err
+
+
+def test_rank_with_inputs_fail_closed_severe_weather(
+    demo_catalogue_path: Path,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    template_path = Path("data/templates/run_input.template.json")
+    inputs_data = json.loads(template_path.read_text(encoding="utf-8"))
+    inputs_data["condition"]["severe_weather_warning"] = True
+
+    severe_inputs = tmp_path / "severe-weather-inputs.json"
+    severe_inputs.write_text(json.dumps(inputs_data), encoding="utf-8")
+
+    exit_code = main(
+        [
+            "rank",
+            "--catalogue",
+            str(demo_catalogue_path),
+            "--inputs",
+            str(severe_inputs),
+            "--format",
+            "json",
+        ]
+    )
+    output = capsys.readouterr()
+    report = json.loads(output.out)
+
+    assert exit_code == 0
+    assert all(rec["eligible"] is False for rec in report["recommendations"])
+    assert any(
+        failure["gate"] == "severe_weather"
+        for rec in report["recommendations"]
+        for failure in rec["hard_gate_failures"]
+    )
