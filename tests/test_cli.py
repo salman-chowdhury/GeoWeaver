@@ -130,3 +130,73 @@ def test_cli_converts_ranking_errors_to_controlled_exit(
     assert exit_code == 3
     assert output.out == ""
     assert "Ranking error: synthetic ranking failure" in output.err
+
+
+def test_rank_with_explicit_inputs_json(
+    demo_catalogue_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    template_path = Path("data/templates/run_input.template.json")
+    exit_code = main(
+        [
+            "rank",
+            "--catalogue",
+            str(demo_catalogue_path),
+            "--inputs",
+            str(template_path),
+            "--format",
+            "json",
+        ]
+    )
+    output = capsys.readouterr()
+    report = json.loads(output.out)
+
+    assert exit_code == 0
+    assert report["demonstration_notice"] == ""
+    # Verify diagnostic message does not include "demonstration"
+    rec = report["recommendations"][0]
+    for info in rec["missing_or_stale_information"]:
+        assert "demonstration" not in info.lower()
+
+
+def test_rank_with_explicit_inputs_markdown(
+    demo_catalogue_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    template_path = Path("data/templates/run_input.template.json")
+    exit_code = main(
+        [
+            "rank",
+            "--catalogue",
+            str(demo_catalogue_path),
+            "--inputs",
+            str(template_path),
+            "--format",
+            "markdown",
+        ]
+    )
+    output = capsys.readouterr()
+
+    assert exit_code == 0
+    assert "> **Warning:**" not in output.out
+    assert "demonstration data" not in output.out.lower()
+    assert "demonstration estimate" not in output.out.lower()
+
+
+def test_rank_with_invalid_inputs_file(
+    demo_catalogue_path: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    invalid_inputs = tmp_path / "invalid_inputs.json"
+    invalid_inputs.write_text("{invalid json", encoding="utf-8")
+
+    exit_code = main(
+        [
+            "rank",
+            "--catalogue",
+            str(demo_catalogue_path),
+            "--inputs",
+            str(invalid_inputs),
+        ]
+    )
+    output = capsys.readouterr()
+
+    assert exit_code == 3
+    assert "Run input error" in output.err

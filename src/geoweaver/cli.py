@@ -6,6 +6,7 @@ from collections.abc import Sequence
 from dataclasses import replace
 from pathlib import Path
 
+from geoweaver.data import RunInputValidationError, load_run_input
 from geoweaver.data.loader import load_catalogue
 from geoweaver.data.validation import CatalogueValidationError
 from geoweaver.demo import (
@@ -71,6 +72,12 @@ def _parser() -> argparse.ArgumentParser:
     )
     rank_parser.add_argument("--catalogue", required=True, type=Path)
     rank_parser.add_argument(
+        "--inputs",
+        type=Path,
+        default=None,
+        help="Path to a user-supplied recommendation-run input JSON document.",
+    )
+    rank_parser.add_argument(
         "--format",
         choices=("json", "markdown"),
         default="markdown",
@@ -86,14 +93,22 @@ def _validate(catalogue: Path) -> int:
     return 0
 
 
-def _rank(catalogue: Path, report_format: str) -> int:
+def _rank(catalogue: Path, inputs: Path | None, report_format: str) -> int:
     segments = load_catalogue(catalogue)
-    condition, travel_estimates = _demonstration_inputs_for_catalogue(segments)
+    if inputs is not None:
+        condition, preferences, travel_estimates = load_run_input(inputs)
+        is_demo = False
+    else:
+        condition, travel_estimates = _demonstration_inputs_for_catalogue(segments)
+        preferences = demonstration_preferences()
+        is_demo = True
+
     run = rank_segments(
         segments,
         condition,
-        demonstration_preferences(),
+        preferences,
         travel_estimates,
+        is_demo=is_demo,
     )
     report = render_json(run) if report_format == "json" else render_markdown(run)
     sys.stdout.write(report)
@@ -106,10 +121,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         if arguments.command == "validate-catalogue":
             return _validate(arguments.catalogue)
-        return _rank(arguments.catalogue, arguments.format)
+        return _rank(arguments.catalogue, arguments.inputs, arguments.format)
     except CatalogueValidationError as error:
         print(f"Catalogue error: {error}", file=sys.stderr)
         return 2
+    except RunInputValidationError as error:
+        print(f"Run input error: {error}", file=sys.stderr)
+        return 3
     except ValueError as error:
         print(f"Ranking error: {error}", file=sys.stderr)
         return 3

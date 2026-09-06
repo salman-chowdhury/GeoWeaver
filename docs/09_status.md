@@ -11,8 +11,8 @@ Last reconciled: **2026-09-07**
 **M1 — Real-trip CastNetGPT v0.1 vertical slice**
 
 Milestone 0, the offline deterministic scoring foundation, is substantially implemented. Task M1.1
-added a validated user-supplied run input document format, and the next goal is to wire those explicit
-inputs into the CLI ranking workflow.
+added a validated user-supplied run input document format, and Task M1.2 wired explicit run inputs into
+the CLI `rank` command (`--inputs <path>`).
 
 ## What GeoWeaver is
 
@@ -69,8 +69,8 @@ wire this into `geoweaver rank`.
 
 ### CLI integration of explicit run inputs
 
-The loader for run input documents (`src/geoweaver/data/run_input.py`) exists and is tested, but
-the CLI `rank` command needs to be updated in M1.2 to accept `--inputs <path>`.
+The CLI `rank` command accepts `--inputs <path>` to load explicit user-supplied recommendation-run inputs,
+omitting demonstration notices and labelling for custom inputs while preserving demo defaults when omitted.
 
 ### Shoreline catalogue contract
 
@@ -157,7 +157,7 @@ These blockers do **not** prevent implementation of the next ready coding task.
 
 The single next implementation task is:
 
-**M1.2 — Wire explicit run inputs into `geoweaver rank`.**
+**M1.3 — Implement a provenance/source registry contract.**
 
 See `docs/10_implementation_plan.md` for the complete task contract and
 `docs/11_progress.md` for the authoritative task state.

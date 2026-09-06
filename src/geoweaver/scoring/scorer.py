@@ -236,6 +236,8 @@ def _missing_or_stale_information(
     segment: ShorelineSegment,
     condition: ConditionSnapshot,
     travel_estimate: TravelEstimate | None,
+    *,
+    is_demo: bool = True,
 ) -> tuple[str, ...]:
     missing: list[str] = []
     if segment.verification_status is VerificationState.REMOTE_REVIEWED:
@@ -304,7 +306,12 @@ def _missing_or_stale_information(
             f"Condition snapshot is stale ({condition.data_freshness_minutes} minutes old)."
         )
     if condition.inferred:
-        missing.append("Condition snapshot is explicitly marked as inferred demonstration data.")
+        if is_demo:
+            missing.append(
+                "Condition snapshot is explicitly marked as inferred demonstration data."
+            )
+        else:
+            missing.append("Condition snapshot is explicitly marked as inferred data.")
     if not condition.weather_status_verified:
         missing.append("Severe-weather status is not verified.")
     if not condition.footing_status_verified:
@@ -329,7 +336,10 @@ def _missing_or_stale_information(
     if travel_estimate is None:
         missing.append("Travel time is missing.")
     elif travel_estimate.inferred:
-        missing.append("Travel time is an inferred manual demonstration estimate.")
+        if is_demo:
+            missing.append("Travel time is an inferred manual demonstration estimate.")
+        else:
+            missing.append("Travel time is an inferred manual estimate.")
     return tuple(missing)
 
 
@@ -479,6 +489,8 @@ def rank_segments(
     condition: ConditionSnapshot,
     preferences: UserPreferences,
     travel_estimates: tuple[TravelEstimate, ...],
+    *,
+    is_demo: bool = True,
 ) -> RecommendationRun:
     """Rank all segments deterministically, always placing eligible records first."""
     segment_ids = [segment.segment_id for segment in segments]
@@ -515,7 +527,9 @@ def rank_segments(
             preferences,
             travel_estimate,
         )
-        missing = _missing_or_stale_information(segment, condition, travel_estimate)
+        missing = _missing_or_stale_information(
+            segment, condition, travel_estimate, is_demo=is_demo
+        )
         confidence_score, confidence_band = _confidence(
             segment, condition, missing, travel_estimate
         )
@@ -569,5 +583,5 @@ def rank_segments(
         preferences=preferences,
         travel_estimates=tuple(sorted(travel_estimates, key=lambda item: item.segment_id)),
         recommendations=ranked,
-        demonstration_notice=DEMONSTRATION_NOTICE,
+        demonstration_notice=DEMONSTRATION_NOTICE if is_demo else "",
     )
