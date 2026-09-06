@@ -48,8 +48,8 @@ The repository currently contains the following working implementation surfaces:
   scoring, reports, and CLI behaviour under `tests/`;
 - pytest and Ruff development configuration.
 
-The typed run-time concepts already include `ConditionSnapshot`, `UserPreferences`,
-`TravelEstimate`, `RankedRecommendation`, and `RecommendationRun`.
+The typed run-time concepts include `ConditionSnapshot`, `UserPreferences`, `TravelEstimate`,
+`RankedRecommendation`, and `RecommendationRun`.
 
 ## Demonstration and user-input workflow that exists today
 
