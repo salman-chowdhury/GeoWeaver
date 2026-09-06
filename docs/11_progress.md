@@ -28,11 +28,8 @@ Owner/governance decisions may remain BLOCKED while independent coding tasks pro
 
 **M1 — Real-trip CastNetGPT v0.1 vertical slice**
 
-## Current NEXT task
-
-- [ ] **NEXT — M1.1 Add a validated user-supplied recommendation-run input document**
-
-Do not skip directly to live APIs, map UI, terrain, imagery, or ML.
+The task carrying the single NEXT marker below is the current implementation focus. Do not skip
+directly to live APIs, map UI, terrain, imagery, or ML.
 
 ## M0 — Offline deterministic foundation
 
