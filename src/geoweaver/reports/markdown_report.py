@@ -22,8 +22,11 @@ def _restriction_bullet(restriction: Restriction) -> str:
     )
 
 
-def _recommendation_section(recommendation: RankedRecommendation) -> list[str]:
+def _recommendation_section(
+    recommendation: RankedRecommendation, *, is_demo: bool = True
+) -> list[str]:
     eligibility = "Eligible" if recommendation.eligibility else "Ineligible (hard-gated)"
+    inputs_context = "demonstration inputs" if is_demo else "run inputs"
     lines = [
         f"## {recommendation.rank}. {recommendation.name}",
         "",
@@ -93,14 +96,14 @@ def _recommendation_section(recommendation: RankedRecommendation) -> list[str]:
                 f"`{failure.gate}`: {failure.reason}"
                 for failure in recommendation.constraints.failures
             ),
-            empty_message="None in the supplied demonstration inputs.",
+            empty_message=f"None in the supplied {inputs_context}.",
         )
     )
     lines.extend(["", "### Missing or stale information", ""])
     lines.extend(
         _bullet_list(
             recommendation.missing_or_stale_information,
-            empty_message="None identified in the supplied demonstration inputs.",
+            empty_message=f"None identified in the supplied {inputs_context}.",
         )
     )
     lines.extend(["", "### Legal and health evidence", ""])
@@ -123,47 +126,60 @@ def render_markdown(run: RecommendationRun) -> str:
     """Render an explanation-first Markdown report."""
     condition = run.condition
     preferences = run.preferences
+    is_demo = bool(run.demonstration_notice)
+    title = (
+        "# CastNetGPT v0.1 Demonstration Ranking"
+        if is_demo
+        else "# CastNetGPT v0.1 Recommendation Ranking"
+    )
+    time_label = "Synthetic condition time" if is_demo else "Condition time"
+    pref_heading = "## Demonstration preferences" if is_demo else "## User preferences"
+
     lines = [
-        "# CastNetGPT v0.1 Demonstration Ranking",
-        "",
-        f"> **Warning:** {run.demonstration_notice}",
-        "",
-        f"- **Run ID:** `{run.run_id}`",
-        f"- **Model version:** `{run.model_version}`",
-        f"- **Synthetic condition time:** {condition.valid_at.isoformat()}",
-        f"- **Tide stage:** `{condition.tide_stage.value}`",
-        f"- **Wind:** {condition.wind_speed_kph} km/h",
-        f"- **Gusts:** {condition.gust_speed_kph} km/h",
-        f"- **Usable daylight:** {condition.usable_daylight_minutes} minutes",
-        f"- **Severe-weather warning:** {condition.severe_weather_warning}",
-        (
-            "- **Lightning/severe-thunderstorm risk:** "
-            f"{condition.lightning_or_severe_thunderstorm_risk}"
-        ),
-        f"- **Footing marked safe:** {condition.footing_safe}",
-        f"- **Conditions inferred:** {condition.inferred}",
-        f"- **Weather status verified:** {condition.weather_status_verified}",
-        f"- **Footing status verified:** {condition.footing_status_verified}",
-        f"- **Tide status verified:** {condition.tide_status_verified}",
-        f"- **Daylight status verified:** {condition.daylight_status_verified}",
-        f"- **Applicable segments:** {', '.join(condition.applicable_segment_ids)}",
-        f"- **Weather evidence:** {', '.join(condition.weather_source_refs) or 'Missing'}",
-        f"- **Footing evidence:** {', '.join(condition.footing_source_refs) or 'Missing'}",
-        f"- **Tide evidence:** {', '.join(condition.tide_source_refs) or 'Missing'}",
-        f"- **Daylight evidence:** {', '.join(condition.daylight_source_refs) or 'Missing'}",
-        "",
-        "## Demonstration preferences",
-        "",
-        f"- Skill level: `{preferences.skill_level.value}`",
-        f"- Family suitability required: {preferences.require_family_suitable}",
-        f"- Minimum family rating: {preferences.minimum_family_suitability}/5",
-        f"- Minimum casting-space rating: {preferences.minimum_casting_space_rating}/5",
-        f"- Minimum usable daylight: {preferences.minimum_usable_daylight_minutes} minutes",
-        f"- Desired privacy rating: {preferences.desired_privacy_rating}/5",
-        f"- Maximum travel time: {preferences.maximum_travel_minutes} minutes",
+        title,
         "",
     ]
+    if run.demonstration_notice:
+        lines.extend([f"> **Warning:** {run.demonstration_notice}", ""])
+    lines.extend(
+        [
+            f"- **Run ID:** `{run.run_id}`",
+            f"- **Model version:** `{run.model_version}`",
+            f"- **{time_label}:** {condition.valid_at.isoformat()}",
+            f"- **Tide stage:** `{condition.tide_stage.value}`",
+            f"- **Wind:** {condition.wind_speed_kph} km/h",
+            f"- **Gusts:** {condition.gust_speed_kph} km/h",
+            f"- **Usable daylight:** {condition.usable_daylight_minutes} minutes",
+            f"- **Severe-weather warning:** {condition.severe_weather_warning}",
+            (
+                "- **Lightning/severe-thunderstorm risk:** "
+                f"{condition.lightning_or_severe_thunderstorm_risk}"
+            ),
+            f"- **Footing marked safe:** {condition.footing_safe}",
+            f"- **Conditions inferred:** {condition.inferred}",
+            f"- **Weather status verified:** {condition.weather_status_verified}",
+            f"- **Footing status verified:** {condition.footing_status_verified}",
+            f"- **Tide status verified:** {condition.tide_status_verified}",
+            f"- **Daylight status verified:** {condition.daylight_status_verified}",
+            f"- **Applicable segments:** {', '.join(condition.applicable_segment_ids)}",
+            f"- **Weather evidence:** {', '.join(condition.weather_source_refs) or 'Missing'}",
+            f"- **Footing evidence:** {', '.join(condition.footing_source_refs) or 'Missing'}",
+            f"- **Tide evidence:** {', '.join(condition.tide_source_refs) or 'Missing'}",
+            f"- **Daylight evidence:** {', '.join(condition.daylight_source_refs) or 'Missing'}",
+            "",
+            pref_heading,
+            "",
+            f"- Skill level: `{preferences.skill_level.value}`",
+            f"- Family suitability required: {preferences.require_family_suitable}",
+            f"- Minimum family rating: {preferences.minimum_family_suitability}/5",
+            f"- Minimum casting-space rating: {preferences.minimum_casting_space_rating}/5",
+            f"- Minimum usable daylight: {preferences.minimum_usable_daylight_minutes} minutes",
+            f"- Desired privacy rating: {preferences.desired_privacy_rating}/5",
+            f"- Maximum travel time: {preferences.maximum_travel_minutes} minutes",
+            "",
+        ]
+    )
     for recommendation in run.recommendations:
-        lines.extend(_recommendation_section(recommendation))
+        lines.extend(_recommendation_section(recommendation, is_demo=is_demo))
         lines.append("")
     return "\n".join(lines).rstrip() + "\n"

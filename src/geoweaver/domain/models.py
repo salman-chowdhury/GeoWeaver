@@ -558,6 +558,8 @@ class RecommendationRun:
     demonstration_notice: str
 
     def __post_init__(self) -> None:
-        for field_name in ("run_id", "application", "model_version", "demonstration_notice"):
+        for field_name in ("run_id", "application", "model_version"):
             _require_text(getattr(self, field_name), field_name)
+        if not isinstance(self.demonstration_notice, str):
+            raise ValueError("demonstration_notice must be a string")
         _require_aware_datetime(self.generated_at, "generated_at")
