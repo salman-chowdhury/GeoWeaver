@@ -110,7 +110,7 @@ def test_source_registry_duplicate_ids() -> None:
 def test_load_template_source_registry() -> None:
     template_path = Path("data/templates/source_registry.template.json")
     registry = load_source_registry(template_path)
-    assert len(registry.sources) == 5
+    assert len(registry.sources) == 16
     assert "demo://synthetic/weather/v0.1" in registry
     record = registry.get("demo://synthetic/weather/v0.1")
     assert record is not None
@@ -202,3 +202,41 @@ def test_verify_source_references() -> None:
 
     missing_none = verify_source_references(registry, ["src-1"])
     assert missing_none == ()
+
+
+def test_demo_catalogue_and_run_input_provenance_resolution() -> None:
+    from geoweaver.data.loader import load_catalogue
+    from geoweaver.data.run_input import load_run_input
+
+    catalogue = load_catalogue("data/catalogue/demo_segments.geojson")
+    condition, _, travel_estimates = load_run_input("data/templates/run_input.template.json")
+    registry = load_source_registry("data/templates/source_registry.template.json")
+
+    collected_refs: list[str] = []
+
+    # Catalogue source refs
+    for segment in catalogue:
+        collected_refs.extend(segment.source_refs)
+        collected_refs.append(segment.health_advisory_evidence.source_ref)
+        for restriction in segment.restrictions:
+            collected_refs.append(restriction.source_ref)
+
+    # Condition & travel input source refs
+    collected_refs.extend(condition.source_refs)
+    for estimate in travel_estimates:
+        collected_refs.append(estimate.source_ref)
+
+    missing = verify_source_references(registry, collected_refs)
+    assert missing == (), f"Found unresolved source references in demo data: {missing}"
+
+
+def test_verify_source_references_detects_unresolved_ref() -> None:
+    from geoweaver.data.loader import load_catalogue
+
+    catalogue = load_catalogue("data/catalogue/demo_segments.geojson")
+    registry = load_source_registry("data/templates/source_registry.template.json")
+
+    collected_refs = list(catalogue[0].source_refs) + ["demo://missing-source-ref/v1.0"]
+
+    missing = verify_source_references(registry, collected_refs)
+    assert missing == ("demo://missing-source-ref/v1.0",)

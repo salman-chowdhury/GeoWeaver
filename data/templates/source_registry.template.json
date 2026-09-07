@@ -2,6 +2,16 @@
   "source_registry": {
     "sources": [
       {
+        "source_id": "demo://synthetic/catalogue/v0.1",
+        "publisher": "GeoWeaver Core Team",
+        "title": "Synthetic Demonstration Shoreline Catalogue",
+        "url_or_identifier": "geoweaver://catalogue/demo_segments.geojson",
+        "licence": "CC0-1.0",
+        "retrieved_at": "2026-01-15T00:00:00Z",
+        "crs_or_resolution": "WGS 84 (EPSG:4326)",
+        "limitations": "Synthetic demonstration data for offline testing."
+      },
+      {
         "source_id": "demo://synthetic/weather/v0.1",
         "publisher": "Bureau of Meteorology (Synthetic)",
         "title": "Coastal Weather Forecast Snapshot",
@@ -51,6 +61,96 @@
         "licence": "ODbL-1.0",
         "retrieved_at": "2026-01-15T05:30:00Z",
         "transformation_note": "Offline manual driving estimates from origin point."
+      },
+      {
+        "source_id": "demo://synthetic/health/alpha",
+        "publisher": "Queensland Health / Local Council (Synthetic)",
+        "title": "Alpha Reach Water Quality Advisory Review",
+        "url_or_identifier": "https://example.qld.gov.au/fictional/health/alpha",
+        "licence": "CC-BY-4.0",
+        "retrieved_at": "2026-01-15T00:00:00Z",
+        "limitations": "Synthetic fixture stating inactive health advisory."
+      },
+      {
+        "source_id": "demo://synthetic/health/beta",
+        "publisher": "Queensland Health / Local Council (Synthetic)",
+        "title": "Beta Reach Water Quality Advisory Review",
+        "url_or_identifier": "https://example.qld.gov.au/fictional/health/beta",
+        "licence": "CC-BY-4.0",
+        "retrieved_at": "2026-01-15T00:00:00Z",
+        "limitations": "Synthetic fixture stating inactive health advisory."
+      },
+      {
+        "source_id": "demo://synthetic/health/closed-reach",
+        "publisher": "Queensland Health / Local Council (Synthetic)",
+        "title": "Closed Reach Water Quality Advisory Review",
+        "url_or_identifier": "https://example.qld.gov.au/fictional/health/closed-reach",
+        "licence": "CC-BY-4.0",
+        "retrieved_at": "2026-01-15T00:00:00Z",
+        "limitations": "Synthetic fixture stating inactive health advisory."
+      },
+      {
+        "source_id": "demo://synthetic/health/unknown-access",
+        "publisher": "Queensland Health / Local Council (Synthetic)",
+        "title": "Unknown Access Water Quality Advisory Review",
+        "url_or_identifier": "https://example.qld.gov.au/fictional/health/unknown-access",
+        "licence": "CC-BY-4.0",
+        "retrieved_at": "2026-01-15T00:00:00Z",
+        "limitations": "Synthetic fixture stating inactive health advisory."
+      },
+      {
+        "source_id": "demo://synthetic/health/narrow-mud-edge",
+        "publisher": "Queensland Health / Local Council (Synthetic)",
+        "title": "Narrow Mud Edge Water Quality Advisory Review",
+        "url_or_identifier": "https://example.qld.gov.au/fictional/health/narrow-mud-edge",
+        "licence": "CC-BY-4.0",
+        "retrieved_at": "2026-01-15T00:00:00Z",
+        "limitations": "Synthetic fixture leaving health advisory status unknown."
+      },
+      {
+        "source_id": "demo://synthetic/restrictions/alpha",
+        "publisher": "Queensland Fisheries / Marine Parks (Synthetic)",
+        "title": "Alpha Reach Legal & Regulatory Review",
+        "url_or_identifier": "https://example.qld.gov.au/fictional/rules/alpha",
+        "licence": "CC-BY-4.0",
+        "retrieved_at": "2026-01-15T00:00:00Z",
+        "limitations": "Synthetic fixture stating inactive restriction."
+      },
+      {
+        "source_id": "demo://synthetic/restrictions/closed-reach",
+        "publisher": "Queensland Fisheries / Marine Parks (Synthetic)",
+        "title": "Closed Reach Legal Closure Order",
+        "url_or_identifier": "https://example.qld.gov.au/fictional/rules/closed-reach",
+        "licence": "CC-BY-4.0",
+        "retrieved_at": "2026-01-15T00:00:00Z",
+        "limitations": "Synthetic fixture declaring active closure."
+      },
+      {
+        "source_id": "demo://synthetic/restrictions/unknown",
+        "publisher": "Queensland Fisheries / Marine Parks (Synthetic)",
+        "title": "Unknown Reach Legal Status Review",
+        "url_or_identifier": "https://example.qld.gov.au/fictional/rules/unknown",
+        "licence": "CC-BY-4.0",
+        "retrieved_at": "2026-01-15T00:00:00Z",
+        "limitations": "Synthetic fixture leaving legal status unknown."
+      },
+      {
+        "source_id": "demo://synthetic/field-review/alpha",
+        "publisher": "GeoWeaver Curation Team",
+        "title": "Alpha Reach Field Verification Log",
+        "url_or_identifier": "geoweaver://field-reviews/alpha",
+        "licence": "CC0-1.0",
+        "retrieved_at": "2026-01-15T00:00:00Z",
+        "transformation_note": "Field inspection log for Alpha Gutter site."
+      },
+      {
+        "source_id": "demo://synthetic/field-review/closed",
+        "publisher": "GeoWeaver Curation Team",
+        "title": "Closed Reach Field Inspection Log",
+        "url_or_identifier": "geoweaver://field-reviews/closed",
+        "licence": "CC0-1.0",
+        "retrieved_at": "2026-01-15T00:00:00Z",
+        "transformation_note": "Field inspection log for Closed Reach site."
       }
     ]
   }
