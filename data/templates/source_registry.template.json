@@ -1,0 +1,57 @@
+{
+  "source_registry": {
+    "sources": [
+      {
+        "source_id": "demo://synthetic/weather/v0.1",
+        "publisher": "Bureau of Meteorology (Synthetic)",
+        "title": "Coastal Weather Forecast Snapshot",
+        "url_or_identifier": "http://www.bom.gov.au/fictional/weather",
+        "licence": "CC-BY-4.0",
+        "retrieved_at": "2026-01-15T05:00:00Z",
+        "publication_updated_at": "2026-01-15T04:30:00Z",
+        "crs_or_resolution": "Point observation",
+        "transformation_note": "Manually transcribed synthetic forecast snapshot.",
+        "limitations": "Synthetic demonstration data for offline testing."
+      },
+      {
+        "source_id": "demo://synthetic/tide/v0.1",
+        "publisher": "Maritime Safety Queensland (Synthetic)",
+        "title": "Tide Station Predictions",
+        "url_or_identifier": "https://www.msq.qld.gov.au/fictional/tides",
+        "licence": "CC-BY-4.0",
+        "retrieved_at": "2026-01-15T05:00:00Z",
+        "publication_updated_at": "2026-01-01T00:00:00Z",
+        "crs_or_resolution": "Station ID 00100",
+        "transformation_note": "Extracted high/low predictions.",
+        "limitations": "Synthetic station assignment for testing."
+      },
+      {
+        "source_id": "demo://synthetic/footing/v0.1",
+        "publisher": "GeoWeaver Curation Team",
+        "title": "Remote Bank & Substrate Curation",
+        "url_or_identifier": "geoweaver://curation/footing/v0.1",
+        "licence": "CC0-1.0",
+        "retrieved_at": "2026-01-10T12:00:00Z",
+        "limitations": "Remote imagery inspection without field verification."
+      },
+      {
+        "source_id": "demo://synthetic/daylight/v0.1",
+        "publisher": "Geoscience Australia (Synthetic)",
+        "title": "Astronomical Sunrise/Sunset Tables",
+        "url_or_identifier": "https://www.ga.gov.au/fictional/sunriseset",
+        "licence": "CC-BY-4.0",
+        "retrieved_at": "2026-01-01T00:00:00Z",
+        "crs_or_resolution": "WGS 84"
+      },
+      {
+        "source_id": "demo://synthetic/travel-times/v0.1",
+        "publisher": "OpenStreetMap / OSRM (Synthetic)",
+        "title": "Manual Travel-Time Estimates",
+        "url_or_identifier": "http://router.project-osrm.org/fictional",
+        "licence": "ODbL-1.0",
+        "retrieved_at": "2026-01-15T05:30:00Z",
+        "transformation_note": "Offline manual driving estimates from origin point."
+      }
+    ]
+  }
+}

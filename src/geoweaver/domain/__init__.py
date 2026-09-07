@@ -27,6 +27,8 @@ from geoweaver.domain.models import (
     Restriction,
     ScoreBreakdown,
     ShorelineSegment,
+    SourceRecord,
+    SourceRegistry,
     TravelEstimate,
     UserPreferences,
 )
@@ -52,6 +54,8 @@ __all__ = [
     "ShorelineSegment",
     "ShorelineType",
     "SkillLevel",
+    "SourceRecord",
+    "SourceRegistry",
     "Substrate",
     "TideStage",
     "TidalStatus",

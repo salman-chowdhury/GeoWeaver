@@ -544,6 +544,67 @@ class RankedRecommendation:
 
 
 @dataclass(frozen=True, slots=True)
+class SourceRecord:
+    """A documented external data or evidence source with provenance metadata."""
+
+    source_id: str
+    publisher: str
+    title: str
+    url_or_identifier: str
+    licence: str
+    retrieved_at: datetime
+    publication_updated_at: datetime | None = None
+    crs_or_resolution: str | None = None
+    transformation_note: str | None = None
+    limitations: str | None = None
+
+    def __post_init__(self) -> None:
+        for field_name in (
+            "source_id",
+            "publisher",
+            "title",
+            "url_or_identifier",
+            "licence",
+        ):
+            _require_text(getattr(self, field_name), field_name)
+        _require_aware_datetime(self.retrieved_at, "retrieved_at")
+        if self.publication_updated_at is not None:
+            _require_aware_datetime(self.publication_updated_at, "publication_updated_at")
+        for field_name in ("crs_or_resolution", "transformation_note", "limitations"):
+            val = getattr(self, field_name)
+            if val is not None:
+                _require_text(val, field_name)
+
+
+@dataclass(frozen=True, slots=True)
+class SourceRegistry:
+    """A collection of documented source records indexed by unique source_id."""
+
+    sources: tuple[SourceRecord, ...]
+
+    def __post_init__(self) -> None:
+        seen_ids: set[str] = set()
+        for source in self.sources:
+            if not isinstance(source, SourceRecord):
+                raise ValueError("sources must contain only SourceRecord instances")
+            if source.source_id in seen_ids:
+                raise ValueError(f"duplicate source_id in registry: {source.source_id!r}")
+            seen_ids.add(source.source_id)
+
+    def get(self, source_id: str) -> SourceRecord | None:
+        """Find a source record by its identifier."""
+        for source in self.sources:
+            if source.source_id == source_id:
+                return source
+        return None
+
+    def __contains__(self, source_id: object) -> bool:
+        if not isinstance(source_id, str):
+            return False
+        return any(source.source_id == source_id for source in self.sources)
+
+
+@dataclass(frozen=True, slots=True)
 class RecommendationRun:
     """Reproducible result set for one catalogue, preference, and condition input."""
 

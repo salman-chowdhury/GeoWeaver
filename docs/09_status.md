@@ -35,6 +35,8 @@ The repository currently contains the following working implementation surfaces:
 - catalogue loading and validation under `src/geoweaver/data/`;
 - run input JSON loading and validation under `src/geoweaver/data/run_input.py` and
   `data/templates/run_input.template.json`;
+- source registry JSON loading and validation under `src/geoweaver/data/provenance.py` and
+  `data/templates/source_registry.template.json`;
 - deterministic hard constraints under `src/geoweaver/scoring/constraints.py`;
 - deterministic scoring, confidence calculation, and ranking under
   `src/geoweaver/scoring/scorer.py`;
@@ -80,9 +82,9 @@ for operational use.
 
 ### Provenance and evidence concepts
 
-The project documents provenance requirements and the current domain models retain source
+The project documents provenance requirements and the domain models retain source
 references, verification state, restrictions, condition source references, and timestamps.
-A complete real-data source registry/governance workflow has not yet been implemented.
+Task M1.3 introduced `SourceRecord`, `SourceRegistry`, and `load_source_registry` for validating file-based source registries.
 
 ### Scoring and confidence
 
@@ -157,7 +159,7 @@ These blockers do **not** prevent implementation of the next ready coding task.
 
 The single next implementation task is:
 
-**M1.3 — Implement a provenance/source registry contract.**
+**M1.4 — Define and test the real-candidate curation workflow.**
 
 See `docs/10_implementation_plan.md` for the complete task contract and
 `docs/11_progress.md` for the authoritative task state.
