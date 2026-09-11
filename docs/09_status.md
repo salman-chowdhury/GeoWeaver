@@ -200,16 +200,14 @@ These blockers do **not** prevent implementation of the next ready coding task.
 
 ## Next task
 
-The single next work item is:
+The single next implementation task is:
 
-**M1.7a — Research the authoritative v0.1 tide source.**
+**M1.7 — Document and implement manual tide-station assignment evidence.**
 
-See `docs/10_implementation_plan.md` for its exact contract and `docs/11_progress.md`
-for the authoritative task state.
-
-M1.7 itself is blocked on M1.7a until an authoritative v0.1 tide source is researched
-and recorded; `docs/03_data_sources.md` currently lists only candidate source classes
-plus an open "determine the best tide source" research task.
+Its tide-source prerequisite is satisfied by M1.7a
+(`docs/13_tide_source_research.md` names the MSQ Queensland Tide Tables as the v0.1
+source). See `docs/10_implementation_plan.md` for its exact contract and
+`docs/11_progress.md` for the authoritative task state.
 
 ## How to update this file
 
