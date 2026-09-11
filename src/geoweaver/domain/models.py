@@ -418,6 +418,46 @@ class TravelEstimate:
 
 
 @dataclass(frozen=True, slots=True)
+class SourceRecord:
+    """Auditable provenance metadata for one external source reference."""
+
+    source_id: str
+    publisher: str
+    title: str
+    licence: str
+    retrieved_at: datetime
+    source_url: str | None = None
+    catalogue_identifier: str | None = None
+    published_at: datetime | None = None
+    crs: str | None = None
+    spatial_resolution: str | None = None
+    temporal_resolution: str | None = None
+    transformation: str = ""
+    limitations: str = ""
+
+    def __post_init__(self) -> None:
+        for field_name in ("source_id", "publisher", "title", "licence"):
+            _require_text(getattr(self, field_name), field_name)
+        _require_aware_datetime(self.retrieved_at, "retrieved_at")
+        if self.source_url is not None:
+            _require_text(self.source_url, "source_url")
+        if self.catalogue_identifier is not None:
+            _require_text(self.catalogue_identifier, "catalogue_identifier")
+        if self.source_url is None and self.catalogue_identifier is None:
+            raise ValueError("at least one of source_url or catalogue_identifier is required")
+        if self.published_at is not None:
+            _require_aware_datetime(self.published_at, "published_at")
+        for field_name in ("crs", "spatial_resolution", "temporal_resolution"):
+            value = getattr(self, field_name)
+            if value is not None:
+                _require_text(value, field_name)
+        if not isinstance(self.transformation, str):
+            raise ValueError("transformation must be a string")
+        if not isinstance(self.limitations, str):
+            raise ValueError("limitations must be a string")
+
+
+@dataclass(frozen=True, slots=True)
 class GateCheck:
     """Result of one named hard-gate check."""
 

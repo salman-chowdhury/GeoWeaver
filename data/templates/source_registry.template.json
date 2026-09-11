@@ -1,0 +1,166 @@
+{
+  "sources": [
+    {
+      "source_id": "demo://synthetic/catalogue/v0.1",
+      "publisher": "GeoWeaver synthetic demo",
+      "title": "Synthetic demonstration shoreline catalogue",
+      "source_url": "demo://synthetic/catalogue/v0.1",
+      "licence": "Synthetic demonstration only — not for operational use.",
+      "retrieved_at": "2026-01-15T06:00:00Z",
+      "crs": "EPSG:4326",
+      "transformation": "None — fictional coordinates authored directly in WGS 84.",
+      "limitations": "Fictional geometry and attributes; must not be treated as real access, legal, or safety evidence."
+    },
+    {
+      "source_id": "demo://synthetic/field-review/alpha",
+      "publisher": "GeoWeaver synthetic demo",
+      "title": "Synthetic remote review note for demo-alpha-gutter",
+      "source_url": "demo://synthetic/field-review/alpha",
+      "licence": "Synthetic demonstration only — not for operational use.",
+      "retrieved_at": "2026-01-14T06:00:00Z",
+      "transformation": "Manual synthetic annotation.",
+      "limitations": "Remote-review fiction; not field verification."
+    },
+    {
+      "source_id": "demo://synthetic/field-review/closed",
+      "publisher": "GeoWeaver synthetic demo",
+      "title": "Synthetic remote review note for demo-closed-reach",
+      "source_url": "demo://synthetic/field-review/closed",
+      "licence": "Synthetic demonstration only — not for operational use.",
+      "retrieved_at": "2026-01-14T06:00:00Z",
+      "transformation": "Manual synthetic annotation.",
+      "limitations": "Remote-review fiction; not field verification."
+    },
+    {
+      "source_id": "demo://synthetic/health/alpha",
+      "publisher": "GeoWeaver synthetic demo",
+      "title": "Synthetic health advisory evidence for demo-alpha-gutter",
+      "source_url": "demo://synthetic/health/alpha",
+      "licence": "Synthetic demonstration only — not for operational use.",
+      "retrieved_at": "2026-01-15T05:00:00Z",
+      "transformation": "None — synthetic fixture.",
+      "limitations": "Not an authoritative health authority statement."
+    },
+    {
+      "source_id": "demo://synthetic/health/beta",
+      "publisher": "GeoWeaver synthetic demo",
+      "title": "Synthetic health advisory evidence for demo-beta-sandbar",
+      "source_url": "demo://synthetic/health/beta",
+      "licence": "Synthetic demonstration only — not for operational use.",
+      "retrieved_at": "2026-01-15T05:00:00Z",
+      "transformation": "None — synthetic fixture.",
+      "limitations": "Not an authoritative health authority statement."
+    },
+    {
+      "source_id": "demo://synthetic/health/closed-reach",
+      "publisher": "GeoWeaver synthetic demo",
+      "title": "Synthetic health advisory evidence for demo-closed-reach",
+      "source_url": "demo://synthetic/health/closed-reach",
+      "licence": "Synthetic demonstration only — not for operational use.",
+      "retrieved_at": "2026-01-15T05:00:00Z",
+      "transformation": "None — synthetic fixture.",
+      "limitations": "Not an authoritative health authority statement."
+    },
+    {
+      "source_id": "demo://synthetic/health/narrow-mud-edge",
+      "publisher": "GeoWeaver synthetic demo",
+      "title": "Synthetic health advisory evidence for demo-narrow-mud-edge",
+      "source_url": "demo://synthetic/health/narrow-mud-edge",
+      "licence": "Synthetic demonstration only — not for operational use.",
+      "retrieved_at": "2026-01-15T05:00:00Z",
+      "transformation": "None — synthetic fixture.",
+      "limitations": "Not an authoritative health authority statement."
+    },
+    {
+      "source_id": "demo://synthetic/health/unknown-access",
+      "publisher": "GeoWeaver synthetic demo",
+      "title": "Synthetic health advisory evidence for demo-unknown-access",
+      "source_url": "demo://synthetic/health/unknown-access",
+      "licence": "Synthetic demonstration only — not for operational use.",
+      "retrieved_at": "2026-01-15T05:00:00Z",
+      "transformation": "None — synthetic fixture.",
+      "limitations": "Unknown status fixture; fails closed by design."
+    },
+    {
+      "source_id": "demo://synthetic/restrictions/alpha",
+      "publisher": "GeoWeaver synthetic demo",
+      "title": "Synthetic restriction evidence for demo-alpha-gutter",
+      "source_url": "demo://synthetic/restrictions/alpha",
+      "licence": "Synthetic demonstration only — not for operational use.",
+      "retrieved_at": "2026-01-15T05:00:00Z",
+      "transformation": "None — synthetic fixture.",
+      "limitations": "Not an authoritative legal instrument."
+    },
+    {
+      "source_id": "demo://synthetic/restrictions/closed-reach",
+      "publisher": "GeoWeaver synthetic demo",
+      "title": "Synthetic restriction evidence for demo-closed-reach",
+      "source_url": "demo://synthetic/restrictions/closed-reach",
+      "licence": "Synthetic demonstration only — not for operational use.",
+      "retrieved_at": "2026-01-15T05:00:00Z",
+      "transformation": "None — synthetic fixture.",
+      "limitations": "Not an authoritative legal instrument."
+    },
+    {
+      "source_id": "demo://synthetic/restrictions/unknown",
+      "publisher": "GeoWeaver synthetic demo",
+      "title": "Synthetic restriction evidence with unknown status",
+      "source_url": "demo://synthetic/restrictions/unknown",
+      "licence": "Synthetic demonstration only — not for operational use.",
+      "retrieved_at": "2026-01-15T05:00:00Z",
+      "transformation": "None — synthetic fixture.",
+      "limitations": "Unknown status fixture; fails closed by design."
+    },
+    {
+      "source_id": "demo://synthetic/weather/v0.1",
+      "publisher": "GeoWeaver synthetic demo",
+      "title": "Synthetic weather and warning evidence",
+      "source_url": "demo://synthetic/weather/v0.1",
+      "licence": "Synthetic demonstration only — not for operational use.",
+      "retrieved_at": "2026-01-15T05:30:00Z",
+      "temporal_resolution": "Single snapshot valid at 2026-01-15T06:00:00Z.",
+      "transformation": "None — manually authored condition fixture.",
+      "limitations": "Not a Bureau of Meteorology product; must not guide real safety decisions."
+    },
+    {
+      "source_id": "demo://synthetic/footing/v0.1",
+      "publisher": "GeoWeaver synthetic demo",
+      "title": "Synthetic footing evidence",
+      "source_url": "demo://synthetic/footing/v0.1",
+      "licence": "Synthetic demonstration only — not for operational use.",
+      "retrieved_at": "2026-01-15T05:30:00Z",
+      "transformation": "None — manually authored condition fixture.",
+      "limitations": "Remote fiction; not a field footing check."
+    },
+    {
+      "source_id": "demo://synthetic/tide/v0.1",
+      "publisher": "GeoWeaver synthetic demo",
+      "title": "Synthetic tide-stage evidence",
+      "source_url": "demo://synthetic/tide/v0.1",
+      "licence": "Synthetic demonstration only — not for operational use.",
+      "retrieved_at": "2026-01-15T05:30:00Z",
+      "transformation": "None — manually authored condition fixture.",
+      "limitations": "No tide-station assignment; must not be used for navigation."
+    },
+    {
+      "source_id": "demo://synthetic/daylight/v0.1",
+      "publisher": "GeoWeaver synthetic demo",
+      "title": "Synthetic daylight evidence",
+      "source_url": "demo://synthetic/daylight/v0.1",
+      "licence": "Synthetic demonstration only — not for operational use.",
+      "retrieved_at": "2026-01-15T05:30:00Z",
+      "transformation": "None — manually authored condition fixture.",
+      "limitations": "Fictional usable-daylight minutes; recheck official sunrise/sunset before any trip."
+    },
+    {
+      "source_id": "demo://synthetic/travel-times/v0.1",
+      "publisher": "GeoWeaver synthetic demo",
+      "title": "Synthetic manual travel estimates from fictional origin",
+      "source_url": "demo://synthetic/travel-times/v0.1",
+      "licence": "Synthetic demonstration only — not for operational use.",
+      "retrieved_at": "2026-01-14T06:00:00Z",
+      "transformation": "Manual estimates; no routing provider involved.",
+      "limitations": "Fictional drive times; must not guide real travel planning."
+    }
+  ]
+}
