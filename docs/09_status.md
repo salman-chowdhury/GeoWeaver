@@ -4,15 +4,19 @@
 > For task order, use `docs/11_progress.md` and `docs/10_implementation_plan.md`.
 > Do not infer current completion state from the roadmap or historical issue checklists.
 
-Last reconciled: **2026-09-07**
+Last reconciled: **2026-09-11**
 
 ## Current milestone
 
 **M1 — Real-trip CastNetGPT v0.1 vertical slice**
 
 Milestone 0, the offline deterministic scoring foundation, is substantially implemented. Task M1.1
-added a validated user-supplied run input document format, and Task M1.2 wired explicit run inputs into
-the CLI `rank` command (`--inputs <path>`).
+added a validated user-supplied run input document format, Task M1.2 wired explicit run inputs into
+the CLI `rank` command (`--inputs <path>`), Task M1.3 added a validated file-based
+provenance/source registry contract, Task M1.4 defined the real-candidate curation
+workflow with a synthetic worked example, and Task M1.6 made legal, closure, and
+health-advisory evidence operational with a documented source hierarchy and regression
+coverage (all synthetic fixtures).
 
 ## What GeoWeaver is
 
@@ -35,6 +39,17 @@ The repository currently contains the following working implementation surfaces:
 - catalogue loading and validation under `src/geoweaver/data/`;
 - run input JSON loading and validation under `src/geoweaver/data/run_input.py` and
   `data/templates/run_input.template.json`;
+- provenance/source registry loading, validation, and audit helpers under
+  `src/geoweaver/data/sources.py` and `data/templates/source_registry.template.json`;
+- real-candidate curation checklist under `data/catalogue/CURATION.md` with a synthetic
+  candidate template (`data/templates/curated_candidate.template.geojson`), a matching
+  registry template (`data/templates/curation_registry.template.json`), and a `--sources`
+  provenance audit on `validate-catalogue`;
+- legal, closure, and health-advisory evidence workflow documented in
+  `docs/12_legal_advisory_evidence.md` (authoritative source hierarchy, effective
+  periods, retrieval timestamps, fail-closed unknown/contradictory handling) with
+  regression tests in `tests/test_legal_advisory.py` pinning that a high habitat
+  score never overrides a legal/advisory failure and reports name the evidence;
 - deterministic hard constraints under `src/geoweaver/scoring/constraints.py`;
 - deterministic scoring, confidence calculation, and ranking under
   `src/geoweaver/scoring/scorer.py`;
@@ -48,7 +63,7 @@ The repository currently contains the following working implementation surfaces:
 - pytest and Ruff development configuration.
 
 The typed run-time concepts already include `ConditionSnapshot`, `UserPreferences`,
-`TravelEstimate`, `RankedRecommendation`, and `RecommendationRun`.
+`TravelEstimate`, `RankedRecommendation`, `RecommendationRun`, and `SourceRecord`.
 
 ## Demonstration workflow that exists today
 
@@ -58,12 +73,20 @@ A developer can install the package and run the synthetic offline workflow:
 uv sync --extra dev
 uv run geoweaver validate-catalogue --catalogue data/catalogue/demo_segments.geojson
 uv run geoweaver rank --catalogue data/catalogue/demo_segments.geojson --format markdown
+uv run geoweaver rank \
+  --catalogue data/catalogue/demo_segments.geojson \
+  --inputs data/templates/run_input.template.json \
+  --sources data/templates/source_registry.template.json \
+  --format markdown
 ```
 
-The `rank` command currently takes a catalogue and output format, but it obtains conditions,
-preferences, origin/travel estimates, and related run inputs from fixed synthetic demonstration
-helpers. Task M1.1 introduced `load_run_input` for loading user-supplied input files, and M1.2 will
-wire this into `geoweaver rank`.
+The `rank` command accepts a catalogue, an output format, an optional `--inputs`
+run-input document, and an optional `--sources` source registry. Without `--inputs` it
+uses fixed synthetic demonstration helpers; with `--inputs` it loads explicit
+user-supplied conditions, preferences, and travel estimates and omits demonstration
+labelling. When `--sources` is supplied, `rank` audits important source references from
+both the catalogue and the run-input evidence against the registry before ranking and
+fails closed on dangling references; omitting it preserves the plain offline behaviour.
 
 ## Implemented but not yet complete for a real trip
 
@@ -71,6 +94,26 @@ wire this into `geoweaver rank`.
 
 The CLI `rank` command accepts `--inputs <path>` to load explicit user-supplied recommendation-run inputs,
 omitting demonstration notices and labelling for custom inputs while preserving demo defaults when omitted.
+
+### Provenance/source registry
+
+A validated file-based registry (`SourceRecord` + `load_source_registry`) describes each stable
+source ID with publisher, title, URL/catalogue identifier, licence/terms, retrieved and
+publication timestamps, CRS/resolution where relevant, transformation, and limitations. The
+synthetic template covers all demo catalogue and run-input references.
+`find_missing_source_refs`/`collect_*_source_refs` audit helpers verify coverage, and the
+CLI enforces it: `validate-catalogue --sources` audits catalogue references, while
+`rank --sources` audits both catalogue and run-input evidence references before ranking.
+Existing `source_refs` remain IDs pointing into this registry.
+
+### Curation workflow
+
+`data/catalogue/CURATION.md` defines the repeatable process for proposing a real shoreline
+candidate: stable IDs, WGS 84 geometry, required evidence per field, `remote_reviewed`
+ceiling for desk research, explicit fail-closed unknowns, and a registry entry for every
+source reference. `validate-catalogue --catalogue <file> --sources <registry>` checks
+structure plus provenance. No real redistributable records are committed until D1 is
+resolved; the checked-in templates are synthetic.
 
 ### Shoreline catalogue contract
 
@@ -82,7 +125,8 @@ for operational use.
 
 The project documents provenance requirements and the current domain models retain source
 references, verification state, restrictions, condition source references, and timestamps.
-A complete real-data source registry/governance workflow has not yet been implemented.
+The file-based registry contract and curation workflow exist; populating them with real
+redistributable data is blocked on D1.
 
 ### Scoring and confidence
 
@@ -93,10 +137,11 @@ must remain the baseline when later live adapters and ML experiments are added.
 
 The following capabilities must not be assumed to exist:
 
-- user-supplied end-to-end run input via CLI;
 - reviewed real shoreline catalogue;
 - selected repository code licence and explicit data-licensing strategy;
-- authoritative real-trip legal/closure/advisory evidence workflow;
+- authoritative real-trip legal/closure/advisory evidence populated with real sources
+  (the M1.6 workflow, hierarchy documentation, and synthetic regression coverage exist;
+  real publication still needs D1);
 - production weather or warning adapter;
 - production tide adapter or documented station-assignment implementation;
 - routing/travel-time provider;
@@ -155,12 +200,16 @@ These blockers do **not** prevent implementation of the next ready coding task.
 
 ## Next task
 
-The single next implementation task is:
+The single next work item is:
 
-**M1.3 — Implement a provenance/source registry contract.**
+**M1.7a — Research the authoritative v0.1 tide source.**
 
-See `docs/10_implementation_plan.md` for the complete task contract and
-`docs/11_progress.md` for the authoritative task state.
+See `docs/10_implementation_plan.md` for its exact contract and `docs/11_progress.md`
+for the authoritative task state.
+
+M1.7 itself is blocked on M1.7a until an authoritative v0.1 tide source is researched
+and recorded; `docs/03_data_sources.md` currently lists only candidate source classes
+plus an open "determine the best tide source" research task.
 
 ## How to update this file
 

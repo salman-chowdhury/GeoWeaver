@@ -43,7 +43,7 @@ The implemented Python package lives under `src/geoweaver/`:
 src/geoweaver/
 ├── cli.py          console interface
 ├── demo.py         fictional deterministic demonstration inputs
-├── data/           current catalogue loading/validation; M1.1 adds run-input loading here
+├── data/           catalogue, run-input, and source-registry loading/validation
 ├── domain/         immutable domain models and enums
 ├── reports/        JSON and Markdown rendering
 └── scoring/        hard constraints, explanations, confidence and deterministic ranking

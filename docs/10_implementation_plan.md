@@ -478,6 +478,54 @@ relevant evidence.
 
 ---
 
+## M1.7a — Research the authoritative v0.1 tide source
+
+### Objective
+
+Establish whether the M1.7 prerequisite ("authoritative tide source researched") is
+satisfied by identifying and documenting one authoritative tide source suitable for the
+initial Ipswich/Brisbane/Logan scope. Research only; no implementation.
+
+### Prerequisites
+
+- M1.3 source registry available (so the note can state how the source will be cited).
+- Public documentation only; no credentials, bulk data, or private trip details.
+
+### Required research
+
+For the candidate source, record:
+
+- publisher;
+- specific product/dataset;
+- geographic/tidal-reach coverage for the study area;
+- station availability and relevance to the study area's tidal reaches;
+- access method;
+- update/publication frequency;
+- licence/terms/attribution;
+- redistribution constraints;
+- known limitations relevant to station assignment (e.g. distant stations,
+  hydraulically separated inland reaches, offsets).
+
+### Deliverable
+
+A short research/design note (or ADR proposal) sufficient to establish whether the M1.7
+prerequisite is satisfied: either it names the researched v0.1 tide source with the
+details above, or it records that no suitable authoritative source was found and what
+that implies for M1.7.
+
+### Non-goals
+
+- Do not select or implement a live provider adapter.
+- Automated tide retrieval belongs to M2.
+- No ranking, scoring, or adapter code; no live network calls in tests.
+
+### Acceptance criteria
+
+A reviewer can read the note and determine, without further research, which authoritative
+tide source M1.7 station-selection work must be based on (or that none is available).
+
+---
+
 ## M1.7 — Document and implement manual tide-station assignment evidence
 
 ### Objective
@@ -486,7 +534,7 @@ Avoid silently applying a distant or inappropriate tide prediction to a shorelin
 
 ### Prerequisites
 
-- authoritative tide source researched;
+- M1.7a DONE (authoritative tide source researched and recorded);
 - M1.3 source registry available.
 
 ### Required work
