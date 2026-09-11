@@ -202,12 +202,14 @@ These blockers do **not** prevent implementation of the next ready coding task.
 
 The single next work item is:
 
-**Tide-source research note (M1.7 prerequisite, research only).**
+**M1.7a — Research the authoritative v0.1 tide source.**
 
-M1.7 itself is blocked until an authoritative v0.1 tide source is researched and recorded;
-`docs/03_data_sources.md` currently lists only candidate source classes plus an open
-"determine the best tide source" research task. See `docs/10_implementation_plan.md` for
-the complete task contract and `docs/11_progress.md` for the authoritative task state.
+See `docs/10_implementation_plan.md` for its exact contract and `docs/11_progress.md`
+for the authoritative task state.
+
+M1.7 itself is blocked on M1.7a until an authoritative v0.1 tide source is researched
+and recorded; `docs/03_data_sources.md` currently lists only candidate source classes
+plus an open "determine the best tide source" research task.
 
 ## How to update this file
 

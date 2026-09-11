@@ -56,21 +56,19 @@ baseline checks before editing code; this file is not a substitute for test exec
 - [ ] **BLOCKED — M1.5 Curate the first 20 reviewed candidates**
   - Blocked by D1 (M1.4 workflow is done; real publication still needs the licence decision).
 - [x] **DONE — M1.6 Make legal, closure, and health-advisory evidence operational**
-- [ ] **NEXT — Tide-source research note (M1.7 prerequisite, research only)**
-  - No ranking/scoring/adapter code; no live network calls in tests.
-  - Identify the authoritative v0.1 tide source for the Ipswich/Brisbane/Logan study
-    area: specific product/dataset, publisher, tidal-reach coverage, access terms,
-    attribution, update frequency, and redistribution limits. Record the basis in a
-    short note or ADR proposal using public documentation only.
+- [ ] **NEXT — M1.7a Research the authoritative v0.1 tide source**
+  - Research only; no ranking/scoring/adapter code and no live network calls in tests.
+  - See `docs/10_implementation_plan.md` for the exact contract (required research,
+    deliverable, non-goals, acceptance criteria).
   - Successor: M1.7 becomes eligible once this note exists (M1.3 registry is available;
     real publication still needs D1).
 - [ ] **BLOCKED — M1.7 Document and implement manual tide-station assignment evidence**
-  - Blocked on the research note above. Its prerequisite ("authoritative tide source
-    researched") is not yet met: `docs/03_data_sources.md` lists only candidate source
-    classes ("authoritative Queensland/Australian tide products", "Maritime Safety
-    Queensland tide tables") plus an open "determine the best tide source and local
-    station offsets" research task. No ADR or design note records a researched v0.1
-    tide source, so station-selection implementation must not proceed yet.
+  - Blocked on M1.7a. Its prerequisite ("authoritative tide source researched") is not
+    yet met: `docs/03_data_sources.md` lists only candidate source classes
+    ("authoritative Queensland/Australian tide products", "Maritime Safety Queensland
+    tide tables") plus an open "determine the best tide source and local station
+    offsets" research task. No ADR or design note records a researched v0.1 tide
+    source, so station-selection implementation must not proceed yet.
   - Use synthetic fixtures when unblocked; real publication still needs D1.
 - [ ] **BLOCKED — M1.8 Complete the manual real-condition snapshot workflow**
   - Blocked by M1.7 (M1.2, M1.3, and M1.6 are done).
