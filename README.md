@@ -42,9 +42,12 @@ The repository provides a Python 3.12+ package that:
 - emits explanation-first JSON and Markdown reports from a console command.
 
 This foundation does **not** complete Issue #1 or the real-trip v0.1 vertical slice. It exercises
-the contracts and deterministic rules with synthetic fixtures. The real-trip work still requires
-explicit user-supplied run inputs, reviewed shoreline candidates, authoritative legal and
-condition evidence, selected code/data licensing strategy, and a recorded field test.
+the contracts and deterministic rules with synthetic fixtures. Explicit user-supplied run inputs
+(M1.1/M1.2), a file-based provenance/source registry with CLI auditing (M1.3), a curation
+workflow with a synthetic worked example (M1.4), and an operational legal/closure/advisory
+evidence workflow with synthetic regression coverage (M1.6) now exist. The real-trip work still
+requires reviewed shoreline candidates, authoritative real evidence, selected code/data licensing
+strategy, and a recorded field test.
 
 ## Installation
 
@@ -77,14 +80,43 @@ Without `uv`, replace `uv run` with `.venv/bin/python -m` for pytest and use
 
 ```sh
 geoweaver validate-catalogue --catalogue data/catalogue/demo_segments.geojson
+geoweaver validate-catalogue \
+  --catalogue data/catalogue/demo_segments.geojson \
+  --sources data/templates/source_registry.template.json
 geoweaver rank --catalogue data/catalogue/demo_segments.geojson
 geoweaver rank --catalogue data/catalogue/demo_segments.geojson --format json
 geoweaver rank --catalogue data/catalogue/demo_segments.geojson --format markdown
+geoweaver rank \
+  --catalogue data/catalogue/demo_segments.geojson \
+  --inputs data/templates/run_input.template.json \
+  --format markdown
+geoweaver rank \
+  --catalogue data/catalogue/demo_segments.geojson \
+  --inputs data/templates/run_input.template.json \
+  --sources data/templates/source_registry.template.json \
+  --format json
 ```
 
-The rank command currently uses a fixed, printed synthetic condition snapshot, fixed demo
-preferences, and sourced manual travel estimates from a fictional origin. This keeps M0 results
-reproducible while explicit user-supplied run inputs are implemented in M1.
+Three modes matter; do not confuse them:
+
+- **Synthetic demo mode** (`rank` without `--inputs`): uses the fixed synthetic condition
+  snapshot, demo preferences, and fictional travel estimates from `src/geoweaver/demo.py`.
+  Reports are labelled as demonstration output. This keeps results reproducible for
+  regression testing but is not a real recommendation.
+- **Explicit offline recommendation inputs** (`rank --inputs <run-input>`): loads
+  user-supplied conditions, preferences, and travel estimates from a validated JSON
+  document (`data/templates/run_input.template.json` shows the shape). Demonstration
+  labelling is omitted. No Python edits are needed; invalid inputs exit non-zero.
+- **Provenance-registry validation** (`--sources <registry>` on either `validate-catalogue`
+  or `rank`): checks that important `source_ref` values resolve to entries in a validated
+  file-based source registry (`data/templates/source_registry.template.json`). On `rank`,
+  both catalogue references and run-input evidence references are audited before ranking,
+  and dangling references fail closed with a non-zero exit. Omitting `--sources` skips
+  the audit and preserves the plain offline behaviour.
+
+Genuinely unimplemented: reviewed real shoreline candidates, authoritative live adapters
+(weather, tide, routing, daylight, closures/advisories), a production database, frontend/API,
+terrain/imagery processing, machine learning, and production deployment.
 
 ## Continuing development
 
@@ -105,7 +137,6 @@ one NEXT task, run the complete checks, update progress/status, and only then ad
 
 ## Planned capabilities
 
-- User-supplied reproducible recommendation runs
 - Reviewed shoreline segmentation and public-access modelling
 - Weather, wind, rainfall, tide, warning, and daylight integration
 - Terrain and bank-slope analysis from DEM and LiDAR
@@ -142,10 +173,14 @@ single next task.
 
 ## Current limitations
 
-- Demo conditions, preferences, origin, and travel estimates are still fixed and synthetic in the
-  current CLI workflow.
+- Without `--inputs`, the `rank` command still uses fixed synthetic demo conditions,
+  preferences, origin, and travel estimates. With `--inputs`, it uses explicit offline
+  user-supplied run inputs instead — but those inputs are still manually authored, not live.
 - There are no live weather, tide, routing, closure, or advisory adapters.
-- There is no reviewed real shoreline catalogue ready for operational recommendations.
+- There is no reviewed real shoreline catalogue ready for operational recommendations
+  (curation workflow exists; real publication is blocked on the D1 licence decision).
+- Provenance auditing (`--sources`) verifies that references resolve to documented registry
+  entries; it does not verify real-world truth of the underlying claims.
 - There is no frontend, API, authentication, production database, scraping, terrain/imagery
   processing, machine learning, or production deployment.
 - Scores express a transparent relative ranking, not catch probability or expected catch.
