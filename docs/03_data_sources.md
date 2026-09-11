@@ -59,7 +59,9 @@ Tier D data may generate a candidate for inspection but must not independently e
 
 ## Immediate research tasks
 
-- determine the best tide source and local station offsets for inland tidal reaches;
+- determine the best tide source and local station offsets for inland tidal reaches
+  (researched for v0.1 in `docs/13_tide_source_research.md`; station-assignment
+  implementation is M1.7);
 - identify public LiDAR coverage for Ipswich, Brisbane, and Logan;
 - inventory council park/facility datasets;
 - confirm which aerial imagery licences permit automated analysis and redistribution of derivatives;

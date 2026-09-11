@@ -56,20 +56,12 @@ baseline checks before editing code; this file is not a substitute for test exec
 - [ ] **BLOCKED — M1.5 Curate the first 20 reviewed candidates**
   - Blocked by D1 (M1.4 workflow is done; real publication still needs the licence decision).
 - [x] **DONE — M1.6 Make legal, closure, and health-advisory evidence operational**
-- [ ] **NEXT — M1.7a Research the authoritative v0.1 tide source**
-  - Research only; no ranking/scoring/adapter code and no live network calls in tests.
-  - See `docs/10_implementation_plan.md` for the exact contract (required research,
-    deliverable, non-goals, acceptance criteria).
-  - Successor: M1.7 becomes eligible once this note exists (M1.3 registry is available;
-    real publication still needs D1).
-- [ ] **BLOCKED — M1.7 Document and implement manual tide-station assignment evidence**
-  - Blocked on M1.7a. Its prerequisite ("authoritative tide source researched") is not
-    yet met: `docs/03_data_sources.md` lists only candidate source classes
-    ("authoritative Queensland/Australian tide products", "Maritime Safety Queensland
-    tide tables") plus an open "determine the best tide source and local station
-    offsets" research task. No ADR or design note records a researched v0.1 tide
-    source, so station-selection implementation must not proceed yet.
-  - Use synthetic fixtures when unblocked; real publication still needs D1.
+- [x] **DONE — M1.7a Research the authoritative v0.1 tide source**
+- [ ] **NEXT — M1.7 Document and implement manual tide-station assignment evidence**
+  - Unblocked by M1.7a (`docs/13_tide_source_research.md` names the MSQ Queensland
+    Tide Tables, Brisbane Bar standard port plus official secondary-place method, as
+    the v0.1 source) and M1.3.
+  - Use synthetic fixtures; real publication still needs D1.
 - [ ] **BLOCKED — M1.8 Complete the manual real-condition snapshot workflow**
   - Blocked by M1.7 (M1.2, M1.3, and M1.6 are done).
 - [ ] **BLOCKED — M1.9 Produce the first reproducible real-trip shortlist**
@@ -149,6 +141,7 @@ Keep this deliberately short. Git history and PRs/issues are the detailed histor
 | 2026-09-11 | M1.3 Implement a provenance/source registry contract | Implemented SourceRecord domain model, file-based registry loader/validator and audit helpers in src/geoweaver/data/sources.py with synthetic template coverage |
 | 2026-09-11 | M1.4 Define and test the real-candidate curation workflow | Added data/catalogue/CURATION.md checklist, synthetic candidate + registry templates, and --sources provenance audit on validate-catalogue with tests |
 | 2026-09-11 | M1.6 Make legal, closure, and health-advisory evidence operational | Documented source hierarchy and evaluation rules in docs/12_legal_advisory_evidence.md with regression tests for active/expired/future/unknown/contradictory evidence in tests/test_legal_advisory.py |
+| 2026-09-11 | M1.7a Research the authoritative v0.1 tide source | Recorded MSQ Queensland Tide Tables (Brisbane Bar + official secondary-place method) as the v0.1 source in docs/13_tide_source_research.md using public documentation only |
 
 ## When a task is completed
 
