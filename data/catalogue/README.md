@@ -36,3 +36,18 @@ estimates fail closed.
 
 `demo_segments.geojson` contains fictional synthetic fixtures only. Its coordinates, access
 claims, restrictions, and environmental characteristics do not describe real places.
+
+## Curating a new candidate
+
+Follow `CURATION.md` in this directory: stable IDs, WGS 84 geometry, required evidence
+per field, `remote_reviewed` ceiling for desk research, explicit unknowns that fail
+closed, and a source-registry entry for every reference. Validate with:
+
+```sh
+geoweaver validate-catalogue --catalogue <candidate.geojson>
+geoweaver validate-catalogue --catalogue <candidate.geojson> --sources <registry.json>
+```
+
+See `data/templates/curated_candidate.template.geojson` and
+`data/templates/curation_registry.template.json` for a synthetic worked example. Do not
+commit real redistributable records until owner decision D1 is resolved.

@@ -8,6 +8,12 @@ from pathlib import Path
 
 from geoweaver.data import RunInputValidationError, load_run_input
 from geoweaver.data.loader import load_catalogue
+from geoweaver.data.sources import (
+    SourceRegistryValidationError,
+    collect_catalogue_source_refs,
+    find_missing_source_refs,
+    load_source_registry,
+)
 from geoweaver.data.validation import CatalogueValidationError
 from geoweaver.demo import (
     demonstration_condition,
@@ -66,6 +72,12 @@ def _parser() -> argparse.ArgumentParser:
         "validate-catalogue", help="Validate a v0.1 GeoJSON catalogue."
     )
     validate_parser.add_argument("--catalogue", required=True, type=Path)
+    validate_parser.add_argument(
+        "--sources",
+        type=Path,
+        default=None,
+        help="Path to a source-registry JSON document for provenance auditing.",
+    )
 
     rank_parser = subparsers.add_parser(
         "rank", help="Rank a shoreline catalogue using explicit or synthetic run inputs."
@@ -86,9 +98,22 @@ def _parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _validate(catalogue: Path) -> int:
+def _validate(catalogue: Path, sources: Path | None = None) -> int:
     segments = load_catalogue(catalogue)
     print(f"Catalogue valid: {len(segments)} segment(s) loaded from {catalogue}.")
+    if sources is not None:
+        registry = load_source_registry(sources)
+        references = collect_catalogue_source_refs(segments)
+        missing = find_missing_source_refs(registry, references)
+        if missing:
+            raise CatalogueValidationError(
+                "catalogue references "
+                f"{len(missing)} source(s) missing from registry {sources}: " + ", ".join(missing)
+            )
+        print(
+            f"Provenance audit passed: {len(references)} "
+            f"source reference(s) resolved from {sources}."
+        )
     print(DEMONSTRATION_NOTICE)
     return 0
 
@@ -120,11 +145,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     arguments = _parser().parse_args(argv)
     try:
         if arguments.command == "validate-catalogue":
-            return _validate(arguments.catalogue)
+            return _validate(arguments.catalogue, arguments.sources)
         return _rank(arguments.catalogue, arguments.inputs, arguments.format)
     except CatalogueValidationError as error:
         print(f"Catalogue error: {error}", file=sys.stderr)
         return 2
+    except SourceRegistryValidationError as error:
+        print(f"Source registry error: {error}", file=sys.stderr)
+        return 3
     except RunInputValidationError as error:
         print(f"Run input error: {error}", file=sys.stderr)
         return 3

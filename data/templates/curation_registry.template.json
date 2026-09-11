@@ -1,0 +1,45 @@
+{
+  "sources": [
+    {
+      "source_id": "curation-example://catalogue/workflow-v0.1",
+      "publisher": "GeoWeaver curation example (synthetic)",
+      "title": "Synthetic curation workflow catalogue entry",
+      "source_url": "curation-example://catalogue/workflow-v0.1",
+      "licence": "Synthetic demonstration only — not for operational use.",
+      "retrieved_at": "2026-01-15T06:00:00Z",
+      "crs": "EPSG:4326",
+      "transformation": "None — fictional coordinates authored directly in WGS 84.",
+      "limitations": "Fictional record supporting the M1.4 workflow only; not a real place."
+    },
+    {
+      "source_id": "curation-example://remote-review/curated-example-001",
+      "publisher": "GeoWeaver curation example (synthetic)",
+      "title": "Synthetic remote-review note for curated-example-001",
+      "source_url": "curation-example://remote-review/curated-example-001",
+      "licence": "Synthetic demonstration only — not for operational use.",
+      "retrieved_at": "2026-01-14T06:00:00Z",
+      "transformation": "Manual synthetic annotation.",
+      "limitations": "Remote-review fiction; explicitly not field verification."
+    },
+    {
+      "source_id": "curation-example://health/curated-example-001",
+      "publisher": "GeoWeaver curation example (synthetic)",
+      "title": "Synthetic health advisory evidence for curated-example-001",
+      "source_url": "curation-example://health/curated-example-001",
+      "licence": "Synthetic demonstration only — not for operational use.",
+      "retrieved_at": "2026-01-15T05:00:00Z",
+      "transformation": "None — synthetic fixture.",
+      "limitations": "Not an authoritative health authority statement."
+    },
+    {
+      "source_id": "curation-example://restrictions/curated-example-001",
+      "publisher": "GeoWeaver curation example (synthetic)",
+      "title": "Synthetic restriction evidence for curated-example-001",
+      "source_url": "curation-example://restrictions/curated-example-001",
+      "licence": "Synthetic demonstration only — not for operational use.",
+      "retrieved_at": "2026-01-15T05:00:00Z",
+      "transformation": "None — synthetic fixture.",
+      "limitations": "Not an authoritative legal instrument."
+    }
+  ]
+}

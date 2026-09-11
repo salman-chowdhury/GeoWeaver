@@ -1,0 +1,75 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [0.02, 0.02],
+          [0.021, 0.0205]
+        ]
+      },
+      "properties": {
+        "segment_id": "curated-example-001",
+        "name": "Curated Example 001 (synthetic template, NOT A REAL PLACE)",
+        "region": "Synthetic Curation Example (NOT A REAL PLACE)",
+        "waterway": "Fictional Example Creek",
+        "shoreline_type": "creek_edge",
+        "substrate": "sand",
+        "bank_slope_class": "gentle",
+        "public_access_status": "verified_public",
+        "verification_status": "remote_reviewed",
+        "activity_permission_status": "permitted",
+        "tidal_status": "tidal",
+        "health_advisory_status": "inactive",
+        "health_advisory_evidence": {
+          "restriction_id": "curated-example-001-health",
+          "restriction_type": "health_advisory",
+          "status": "inactive",
+          "authority": "Curation example synthetic authority",
+          "source_ref": "curation-example://health/curated-example-001",
+          "reason": "Synthetic template states no active health advisory.",
+          "effective_from": "2026-01-01T00:00:00Z",
+          "effective_to": "2026-12-31T23:59:59Z",
+          "retrieved_at": "2026-01-15T00:00:00Z"
+        },
+        "casting_space_rating": 4,
+        "parking": {
+          "available": null,
+          "spaces_estimate": null,
+          "notes": "Unknown in this template on purpose: contributor has not verified parking."
+        },
+        "toilets": null,
+        "family_suitability": 3,
+        "privacy_rating": 2,
+        "mud_risk": 2,
+        "snag_risk": 2,
+        "boat_traffic_rating": 1,
+        "wind_shelter_rating": 3,
+        "habitat_features": ["shallow_gutter"],
+        "preferred_tide_stages": ["rising"],
+        "legal_status_known": true,
+        "safety_information_complete": true,
+        "restrictions": [
+          {
+            "restriction_id": "curated-example-001-restriction",
+            "restriction_type": "example_legal_review",
+            "status": "inactive",
+            "authority": "Curation example synthetic authority",
+            "source_ref": "curation-example://restrictions/curated-example-001",
+            "reason": "Synthetic template states no active closure.",
+            "effective_from": "2026-01-01T00:00:00Z",
+            "effective_to": "2026-12-31T23:59:59Z",
+            "retrieved_at": "2026-01-15T00:00:00Z"
+          }
+        ],
+        "source_refs": [
+          "curation-example://catalogue/workflow-v0.1",
+          "curation-example://remote-review/curated-example-001"
+        ],
+        "last_updated": "2026-01-15T00:00:00Z"
+      }
+    }
+  ]
+}
